@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMINISTRATOR
+  PARTICIPANT
+  INSCRIBER
+}
+
+model User {
+  id              String           @id @default(cuid())
+  dni             String?          @unique @db.Char(8)
+  name            String?          @db.VarChar(50)
+  lastname        String?          @db.VarChar(50)
+  email           String           @unique @db.VarChar(50)
+  emailVerified   DateTime?
+  phone           String?          @db.VarChar(9)
+  institution     String?          @db.VarChar(50)
+  image           String?
+  role            Role             @default(PARTICIPANT)
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  vouchers        Voucher[]
+  inscriptions    Inscription[]
+  userAttendances UserAttendance[]
+  accounts        Account[]
+  sessions        Session[]
+
+  @@map("user")
+}
+
+model VerificationToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("account")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+enum CincitEdition {
+  E2025 @map("2025")
+  E2026 @map("2026")
+}
+
+enum AttendanceType {
+  entrance
+  exit
+}
+
+enum AttendanceState {
+  visible
+  hidden
+}
+
+model Attendance {
+  id              Int              @id @default(autoincrement())
+  date            DateTime         @default(now())
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  cincitEdition   CincitEdition    @default(E2025)
+  attendanceType  AttendanceType
+  attendanceState AttendanceState  @default(hidden)
+  userAttendances UserAttendance[]
+
+  @@map("attendance")
+}
+
+model UserAttendance {
+  userId       String     @map("user_id")
+  attendanceId Int        @map("attendance_id")
+  date         DateTime   @default(now())
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  user         User       @relation(fields: [userId], references: [id])
+  attendance   Attendance @relation(fields: [attendanceId], references: [id])
+
+  @@id([userId, attendanceId])
+  @@map("user_attendance")
+}
+
+enum InscriptionState {
+  pending
+  approved
+  rejected
+}
+
+enum InscriptionType {
+  general
+}
+
+model Voucher {
+  id           Int           @id @default(autoincrement())
+  userId       String        @map("user_id")
+  amount       Int
+  path         String        @db.Text
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  user         User          @relation(fields: [userId], references: [id])
+  inscriptions Inscription[]
+
+  @@map("voucher")
+}
+
+model Inscription {
+  id              Int              @id @default(autoincrement())
+  userId          String           @map("user_id")
+  voucherId       Int              @map("voucher_id")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  user            User             @relation(fields: [userId], references: [id])
+  inscriptionType InscriptionType  @default(general)
+  voucher         Voucher          @relation(fields: [voucherId], references: [id])
+  state           InscriptionState @default(pending)
+  cincitEdition   CincitEdition    @default(E2025)
+
+  @@map("inscription")
+}

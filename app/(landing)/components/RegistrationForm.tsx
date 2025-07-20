@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,9 +18,57 @@ import {
   Upload,
   User,
 } from "lucide-react";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  RegistrationFormData,
+  registrationSchema,
+} from "@/schemas/register.schema";
+import { registerUserAction } from "@/actions/register.action";
 
 const RegistrationForm = () => {
-  const onSubmit = () => {};
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    watch,
+    reset,
+  } = useForm<RegistrationFormData>({
+    resolver: zodResolver(registrationSchema),
+  });
+
+  const voucherFile = watch("voucher");
+  const voucherFileName =
+    voucherFile?.[0]?.name || "Haz clic para subir tu voucher";
+
+  const onSubmit = async (data: RegistrationFormData) => {
+    const formData = new FormData();
+    formData.append("name", data.firstName);
+    formData.append("lastname", data.lastName);
+    formData.append("dni", data.dni);
+    formData.append("email", data.email);
+    formData.append("institution", data.institution);
+    formData.append("phone", data.telephone);
+
+    if (data.voucher && data.voucher.length > 0) {
+      formData.append("file", data.voucher[0]);
+    }
+
+    const result = await registerUserAction(formData);
+
+    if (result.success) {
+      toast.success("¡Éxito!", {
+        description: result.message,
+      });
+      reset();
+      window.scrollTo(0, 0);
+    } else {
+      toast.error("Error en el registro", {
+        description: result.message,
+      });
+    }
+  };
 
   return (
     <section
@@ -38,7 +87,7 @@ const RegistrationForm = () => {
           </CardHeader>
 
           <CardContent>
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label
@@ -52,15 +101,15 @@ const RegistrationForm = () => {
                     id="firstName"
                     type="text"
                     placeholder="Ingresa tus nombres"
-                    // {...register("firstName", { required: true })}
+                    {...register("firstName", { required: true })}
                     className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20"
                     required
                   />
-                  {/* {errors.firstName && (
+                  {errors.firstName && (
                     <p className="text-red-500 text-sm">
                       {errors.firstName.message}
                     </p>
-                  )} */}
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -74,16 +123,16 @@ const RegistrationForm = () => {
                   <Input
                     id="lastName"
                     type="text"
-                    // {...register("lastName", { required: true })}
+                    {...register("lastName", { required: true })}
                     placeholder="Ingresa tus apellidos"
                     className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20"
                     required
                   />
-                  {/* {errors.lastName && (
+                  {errors.lastName && (
                     <p className="text-red-500 text-sm">
                       {errors.lastName.message}
                     </p>
-                  )} */}
+                  )}
                 </div>
               </div>
 
@@ -99,16 +148,16 @@ const RegistrationForm = () => {
                   <Input
                     id="institution"
                     type="text"
-                    // {...register("institution", { required: true })}
+                    {...register("institution", { required: true })}
                     placeholder="Nombre de tu institución o universidad"
                     className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20"
                     required
                   />
-                  {/* {errors.institution && (
+                  {errors.institution && (
                     <p className="text-red-500 text-sm">
                       {errors.institution.message}
                     </p>
-                  )} */}
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label
@@ -121,15 +170,15 @@ const RegistrationForm = () => {
                   <Input
                     id="dni"
                     type="text"
-                    // {...register("dni", { required: true })}
+                    {...register("dni", { required: true })}
                     placeholder="Ingresa tu dni"
                     className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20"
                     required
                   />
 
-                  {/* {errors.dni && (
+                  {errors.dni && (
                     <p className="text-red-500 text-sm">{errors.dni.message}</p>
-                  )} */}
+                  )}
                 </div>
               </div>
 
@@ -145,16 +194,17 @@ const RegistrationForm = () => {
                   <Input
                     id="email"
                     type="text"
+                    {...register("email", { required: true })}
                     placeholder="Nombre de tu institución o universidad"
                     className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20"
                     required
                   />
 
-                  {/* {errors.email && (
+                  {errors.email && (
                     <p className="text-red-500 text-sm">
                       {errors.email.message}
                     </p>
-                  )} */}
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label
@@ -167,16 +217,17 @@ const RegistrationForm = () => {
                   <Input
                     id="telephone"
                     type="text"
+                    {...register("telephone", { required: true })}
                     placeholder="Ingresa tu telefono"
                     className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20"
                     required
                   />
 
-                  {/* {errors.telephone && (
+                  {errors.telephone && (
                     <p className="text-red-500 text-sm">
                       {errors.telephone.message}
                     </p>
-                  )} */}
+                  )}
                 </div>
               </div>
 
@@ -194,27 +245,29 @@ const RegistrationForm = () => {
                     type="file"
                     accept="image/*"
                     className="hidden"
+                    {...register("voucher")}
                   />
                   <label htmlFor="voucher" className="cursor-pointer">
                     <Upload className="mx-auto text-blue-500 mb-2" size={32} />
-                    {/* <p className="text-slate-600">{voucherFileName}</p> */}
+                    <p className="text-slate-600">{voucherFileName}</p>
                     <p className="text-sm text-slate-500 mt-1">
                       PNG, JPG y WEBP (máx. 5MB)
                     </p>
                   </label>
-                  {/* {errors.voucher && (
+                  {errors.voucher && (
                     <p className="text-red-500 text-sm">
                       {errors.voucher.message?.toString()}
                     </p>
-                  )} */}
+                  )}
                 </div>
               </div>
 
               <Button
                 type="submit"
+                disabled={isSubmitting}
                 className="w-full bg-gradient-primary hover:bg-gradient-secondary text-primary-foreground font-semibold py-3 rounded-xl shadow-glow-primary hover-glow transition-all duration-300"
               >
-                Completar Registro
+                {isSubmitting ? "Registrando..." : "Completar Registro"}
               </Button>
             </form>
 
@@ -231,7 +284,6 @@ const RegistrationForm = () => {
           </CardContent>
         </Card>
       </div>
-      {/* {registerMuta.isSuccess && <Confetti />} */}
     </section>
   );
 };

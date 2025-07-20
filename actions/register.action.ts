@@ -1,0 +1,130 @@
+"use server";
+import prisma from "@/lib/prisma";
+import { z } from "zod";
+import {
+  v2 as cloudinary,
+  UploadApiErrorResponse,
+  UploadApiResponse,
+} from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const serverRegistrationSchema = z.object({
+  name: z.string().min(2),
+  lastname: z.string().min(2),
+  dni: z.string().length(8),
+  email: z.email(),
+  phone: z.string().length(9),
+  institution: z.string().min(3),
+  file: z.instanceof(File),
+});
+
+export async function registerUserAction(formData: FormData) {
+  const data = Object.fromEntries(formData.entries());
+  const validation = serverRegistrationSchema.safeParse(data);
+  console.log("data ->", data);
+
+  if (!validation.success) {
+    console.error("Validación fallida en el servidor:");
+    return { success: false, message: "Los datos enviados no son válidos." };
+  }
+
+  const {
+    name,
+    lastname,
+    dni,
+    email,
+    phone,
+    institution,
+    file: voucherFile,
+  } = validation.data;
+
+  try {
+    const userExists = await prisma.user.findFirst({
+      where: { OR: [{ email }, { dni }] },
+    });
+
+    if (userExists) {
+      return {
+        success: false,
+        message: "El correo electrónico o DNI ya se encuentra registrado.",
+      };
+    }
+
+    // ----------------- cloudinary
+    const buffer = Buffer.from(await voucherFile.arrayBuffer());
+    const cloudinaryResponse = await new Promise<UploadApiResponse>(
+      (resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { resource_type: "auto", folder: "cincit-app" },
+          (
+            error: UploadApiErrorResponse | undefined,
+            result: UploadApiResponse | undefined
+          ) => {
+            if (error) {
+              return reject(error);
+            }
+            if (result) {
+              resolve(result);
+            } else {
+              reject(new Error("Cloudinary did not return a result."));
+            }
+          }
+        );
+        uploadStream.end(buffer);
+      }
+    );
+    // -----------------
+
+    // ----------------- lolcal en vps
+    // const buffer = Buffer.from(await voucherFile.arrayBuffer());
+    // const uploadDir = path.join(process.cwd(), "public/uploads");
+    // const randomNum = Math.floor(100 + Math.random() * 900);
+    // const uniqueFilename = `${Date.now()}-${randomNum}${path.extname(
+    //   voucherFile.name
+    // )}`;
+    // const filePath = path.join(uploadDir, uniqueFilename);
+
+    // await fs.mkdir(uploadDir, { recursive: true });
+    // await fs.writeFile(filePath, buffer);
+
+    // -----------------
+
+    await prisma.$transaction(async (tx) => {
+      const newUser = await tx.user.create({
+        data: { name, lastname, dni, email, phone, institution },
+      });
+
+      const newVoucher = await tx.voucher.create({
+        data: {
+          // path: `/uploads/${uniqueFilename}`,
+          path: cloudinaryResponse.secure_url,
+          amount: 0,
+          userId: newUser.id,
+        },
+      });
+
+      await tx.inscription.create({
+        data: {
+          userId: newUser.id,
+          voucherId: newVoucher.id,
+        },
+      });
+    });
+
+    return {
+      success: true,
+      message: "¡Registro exitoso! Tu inscripción está pendiente de revisión.",
+    };
+  } catch (error) {
+    console.error("Error en registerUserAction:", error);
+    return {
+      success: false,
+      message: "Ocurrió un error inesperado. Por favor, inténtalo de nuevo.",
+    };
+  }
+}
