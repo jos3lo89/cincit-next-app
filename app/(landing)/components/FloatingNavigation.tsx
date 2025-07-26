@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Calendar, Users, UserPlus } from "lucide-react";
+import { Home, Calendar, Users, UserPlus, GalleryVertical } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -10,6 +10,7 @@ export const FloatingNavigation = () => {
   const navItems = [
     { icon: Home, label: "Inicio", href: "/" },
     { icon: Calendar, label: "Cronograma", href: "/schedule" },
+    { icon: GalleryVertical, label: "Galeria", href: "/gallery" },
     {
       icon: Users,
       label: "Sobre Nosotros",
@@ -27,12 +28,10 @@ export const FloatingNavigation = () => {
       <nav className="bg-nav-background backdrop-blur-lg border border-nav-border rounded-2xl px-3 py-1 shadow-2xl">
         <div className="relative flex items-center gap-1">
           {navItems.map((item) => {
-            // La lógica para 'isActive' funciona igual, pero ahora con 'pathname'.
             const isActive = pathname === item.href;
             const Icon = item.icon;
 
             return (
-              // Usamos el componente Link de Next.js para todos los elementos.
               <Link
                 key={item.href}
                 href={item.href}
