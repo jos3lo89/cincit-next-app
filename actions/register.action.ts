@@ -6,6 +6,7 @@ import {
   UploadApiErrorResponse,
   UploadApiResponse,
 } from "cloudinary";
+import { Prisma } from "@prisma/client";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -94,7 +95,7 @@ export async function registerUserAction(formData: FormData) {
     // await fs.writeFile(filePath, buffer);
     // -----------------
 
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const newUser = await tx.user.create({
         data: { name, lastname, dni, email, phone, institution },
       });
