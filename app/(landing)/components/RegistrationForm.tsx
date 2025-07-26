@@ -169,7 +169,7 @@ const RegistrationForm = () => {
                   </Label>
                   <Input
                     id="dni"
-                    type="text"
+                    type="number"
                     {...register("dni", { required: true })}
                     placeholder="Ingresa tu dni"
                     className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20"
@@ -193,7 +193,7 @@ const RegistrationForm = () => {
                   </Label>
                   <Input
                     id="email"
-                    type="text"
+                    type="email"
                     {...register("email", { required: true })}
                     placeholder="Nombre de tu institución o universidad"
                     className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20"
@@ -216,7 +216,7 @@ const RegistrationForm = () => {
                   </Label>
                   <Input
                     id="telephone"
-                    type="text"
+                    type="number"
                     {...register("telephone", { required: true })}
                     placeholder="Ingresa tu telefono"
                     className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20"
