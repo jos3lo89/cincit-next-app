@@ -265,7 +265,7 @@ const RegistrationForm = () => {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-gradient-primary hover:bg-gradient-secondary text-primary-foreground font-semibold py-3 rounded-xl shadow-glow-primary hover-glow transition-all duration-300"
+                className="w-full bg-gradient-primary cursor-pointer hover:bg-gradient-secondary text-primary-foreground font-semibold py-3 rounded-xl shadow-glow-primary hover-glow transition-all duration-300"
               >
                 {isSubmitting ? "Registrando..." : "Completar Registro"}
               </Button>

@@ -57,6 +57,7 @@ export async function registerUserAction(formData: FormData) {
 
     // ----------------- cloudinary
     const buffer = Buffer.from(await voucherFile.arrayBuffer());
+
     const cloudinaryResponse = await new Promise<UploadApiResponse>(
       (resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
@@ -91,7 +92,6 @@ export async function registerUserAction(formData: FormData) {
 
     // await fs.mkdir(uploadDir, { recursive: true });
     // await fs.writeFile(filePath, buffer);
-
     // -----------------
 
     await prisma.$transaction(async (tx) => {

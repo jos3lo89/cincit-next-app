@@ -44,7 +44,7 @@ const HeroSection = () => {
               <CountdownTimer />
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 lg:px-6 justify-center lg:justify-around ">
+            <div className="flex flex-col sm:flex-row gap-4  justify-center lg:justify-start ">
               <Button
                 size="lg"
                 className="bg-gradient-primary hover:bg-gradient-secondary text-primary-foreground font-semibold px-8 py-4 rounded-xl shadow-glow-primary hover-glow transition-all duration-300"
