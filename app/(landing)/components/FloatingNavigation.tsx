@@ -13,7 +13,7 @@ export const FloatingNavigation = () => {
     { icon: GalleryVertical, label: "Galeria", href: "/gallery" },
     {
       icon: Users,
-      label: "Sobre Nosotros",
+      label: "Nosotros",
       href: "/#about",
     },
     {
@@ -25,21 +25,20 @@ export const FloatingNavigation = () => {
 
   return (
     <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
-      <nav className="bg-nav-background backdrop-blur-lg border border-nav-border rounded-2xl px-3 py-1 shadow-2xl">
-        <div className="relative flex items-center gap-1">
+      <nav className="bg-slate-900/95 backdrop-blur-lg border border-slate-700/50 rounded-2xl px-1 py-1 shadow-2xl shadow-black/20">
+        <div className="relative flex items-center md:gap-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
-
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={`
-                  px-3 py-2 rounded-xl transition-all duration-300 group ${
+                  px-2 md:px-3 xl:px-4 2xl:px-6 py-2 rounded-xl transition-all duration-300 group ${
                     isActive
-                      ? "shadow-glow-primary shadow-lg"
-                      : "text-muted-foreground hover:text-foreground hover:bg-card-hover"
+                      ? "bg-blue-600/20 shadow-lg shadow-blue-500/25 border border-blue-500/30"
+                      : "text-slate-300 hover:text-white hover:bg-slate-800/60"
                   }
                 `}
               >
@@ -48,8 +47,8 @@ export const FloatingNavigation = () => {
                     size={20}
                     className={`transition-all duration-300 ${
                       isActive
-                        ? "text-nav-active scale-110"
-                        : "group-hover:scale-105"
+                        ? "text-blue-400 scale-110"
+                        : "text-slate-300 group-hover:text-white group-hover:scale-105"
                     }`}
                   />
                   <span
@@ -57,8 +56,8 @@ export const FloatingNavigation = () => {
                       text-xs font-medium transition-all duration-300
                       ${
                         isActive
-                          ? "text-nav-active"
-                          : "text-nav-text-muted group-hover:text-nav-text"
+                          ? "text-blue-400"
+                          : "text-slate-400 group-hover:text-white"
                       }
                     `}
                   >

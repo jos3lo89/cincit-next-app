@@ -193,13 +193,13 @@ const GalleryPage = () => {
             {/* Botón cerrar */}
             <button
               onClick={closeModal}
-              className="absolute -top-4 -right-4 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors duration-200"
+              className="absolute -top-1 -right-0 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors duration-200"
               style={{
                 /* CSS personalizado para botón cerrar */
                 boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
               }}
             >
-              <X className="w-6 h-6 text-gray-800" />
+              <X className="w-4 h-4 text-gray-800" />
             </button>
           </div>
         </div>
