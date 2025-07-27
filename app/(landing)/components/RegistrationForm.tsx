@@ -26,59 +26,56 @@ import {
   registrationSchema,
 } from "@/schemas/register.schema";
 import { registerUserAction } from "@/actions/register.action";
-import {useEffect, useRef, useState} from "react";
-
+import { useEffect, useRef, useState } from "react";
 
 const RegistrationForm = () => {
-  const [selectUniversity, setSelectUniversity] = useState<string | null>(null)
-  const [universityList, setUniversityList] = useState<InstitutionUser[]>([])
-  const [viewInput, setViewInput] = useState(false)
-  const [newUniversity, setNewUniversity] = useState('')
-  const inputRef = useRef<HTMLInputElement | null>(null)
+  const [selectUniversity, setSelectUniversity] = useState<string | null>(null);
+  const [universityList, setUniversityList] = useState<InstitutionUser[]>([]);
+  const [viewInput, setViewInput] = useState(false);
+  const [newUniversity, setNewUniversity] = useState("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const fetchInstitutions = async () => {
+    try {
+      const res = await fetch("/api/institution-list");
+      const data = await res.json();
+      setUniversityList(data);
+    } catch (error) {
+      console.error("Error al cargar instituciones", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchInstitutions = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/institution-list")
-        console.log("Cargando instituciones desde la API", res)
-        const data: InstitutionUser[] = await res.json()
-        setUniversityList(data)
-      } catch (error) {
-        console.error("Error al cargar instituciones", error)
-      }
-    }
-
-    fetchInstitutions()
-  }, [])
-
+    fetchInstitutions();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value
-    if (value === 'nueva') {
-      setViewInput(true)
-      setTimeout(() => inputRef.current?.focus(), 0)
+    const value = e.target.value;
+    if (value === "nueva") {
+      setViewInput(true);
+      setTimeout(() => inputRef.current?.focus(), 0);
     } else {
-      setSelectUniversity(value)
-      const selected = universityList.find((u) => u.id === value)
-      setValue('institution', selected?.institution || '')
-      setViewInput(false)
+      setSelectUniversity(value);
+      const selected = universityList.find((u) => u.id === value);
+      setValue("institution", selected?.institution || "");
+      setViewInput(false);
     }
-  }
+  };
 
   const handleUniversityList = () => {
-    if (newUniversity.trim() !== '') {
-      const newId = (universityList.length + 1).toString()
-      const add = { id: newId, institution: newUniversity.trim() }
-      const updatedUniversityList = [...universityList, add]
+    if (newUniversity.trim() !== "") {
+      const newId = (universityList.length + 1).toString();
+      const add = { id: newId, institution: newUniversity.trim() };
+      const updatedUniversityList = [...universityList, add];
 
-      setUniversityList(updatedUniversityList)
-      setSelectUniversity(newId)
-      setValue('institution', add.institution)
-      setNewUniversity('')
+      setUniversityList(updatedUniversityList);
+      setSelectUniversity(newId);
+      setValue("institution", add.institution);
+      setNewUniversity("");
     }
 
-    setViewInput(false)
-  }
+    setViewInput(false);
+  };
 
   const {
     register,
@@ -192,7 +189,7 @@ const RegistrationForm = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label
-                    htmlFor="institution"
+                    htmlFor="university"
                     className="text-sm font-medium text-foreground"
                   >
                     <Building className="inline w-4 h-4 mr-2" />
@@ -200,30 +197,42 @@ const RegistrationForm = () => {
                   </Label>
 
                   <select
-                      id="university"
-                      onChange={handleChange}
-                      value={selectUniversity ?? ''}
-                      className="w-full p-2 border rounded-md"
+                    id="university"
+                    onChange={handleChange}
+                    value={selectUniversity ?? ""}
+                    className="w-full p-2 border rounded-md"
                   >
-                    <option value="" className="bg-background text-foreground">-- Seleccionar --</option>
+                    <option value="" className="bg-background text-foreground">
+                      Seleccionar
+                    </option>
                     {universityList.map((option) => (
-                        <option key={option.id} value={option.id} className="bg-background text-foreground">
-                          {option.institution}
-                        </option>
+                      <option
+                        key={option.id}
+                        value={option.id}
+                        className="bg-background text-foreground"
+                      >
+                        {option.institution}
+                      </option>
                     ))}
-                    <option value="nueva" className="bg-background text-foreground">+ Agregar nueva universidad</option>
+                    <option
+                      value="nueva"
+                      className="bg-background text-foreground"
+                    >
+                      + Agregar nueva universidad
+                    </option>
                   </select>
 
                   {viewInput && (
-                      <Input
-                          ref={inputRef}
-                          type="text"
-                          placeholder="Nombre de la universidad"
-                          className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20 mt-2"
-                          value={newUniversity}
-                          onChange={(e) => setNewUniversity(e.target.value)}
-                          onBlur={handleUniversityList}
-                      />
+                    <Input
+                      id="university"
+                      ref={inputRef}
+                      type="text"
+                      placeholder="Nombre de la universidad"
+                      className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20 mt-2"
+                      value={newUniversity}
+                      onChange={(e) => setNewUniversity(e.target.value)}
+                      onBlur={handleUniversityList}
+                    />
                   )}
 
                   {errors.institution && (
