@@ -52,7 +52,7 @@ const GalleryPage = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen mb-16">
       <header className="text-center py-16 px-4 relative overflow-hidden">
         <div className="relative z-10">
           <div className="inline-block mb-6">

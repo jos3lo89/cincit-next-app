@@ -1,4 +1,4 @@
-import { infer, number, object, string } from "zod";
+import { infer, object, string } from "zod";
 
 const envVar = object({
   DATABASE_URL: string(),

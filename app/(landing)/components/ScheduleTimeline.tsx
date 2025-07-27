@@ -4,7 +4,7 @@ import { eventDays, scheduleData } from "@/data/timeLine.data";
 
 const ScheduleTimeline = () => {
   return (
-    <section className="py-8 md:py-16 px-4">
+    <section className="py-8 md:py-16 px-4 mb-16">
       <Tabs defaultValue="dia1" className="w-full">
         <TabsList className="grid w-full grid-cols-3 max-w-4xl mx-auto mb-12 h-auto bg-card/50 p-2">
           {eventDays.map((day, index) => (
