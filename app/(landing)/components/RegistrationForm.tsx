@@ -26,11 +26,64 @@ import {
   registrationSchema,
 } from "@/schemas/register.schema";
 import { registerUserAction } from "@/actions/register.action";
+import {useEffect, useRef, useState} from "react";
+
 
 const RegistrationForm = () => {
+  const [selectUniversity, setSelectUniversity] = useState<string | null>(null)
+  const [universityList, setUniversityList] = useState<InstitutionUser[]>([])
+  const [viewInput, setViewInput] = useState(false)
+  const [newUniversity, setNewUniversity] = useState('')
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  useEffect(() => {
+    const fetchInstitutions = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/api/institution-list")
+        console.log("Cargando instituciones desde la API", res)
+        const data: InstitutionUser[] = await res.json()
+        setUniversityList(data)
+      } catch (error) {
+        console.error("Error al cargar instituciones", error)
+      }
+    }
+
+    fetchInstitutions()
+  }, [])
+
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value
+    if (value === 'nueva') {
+      setViewInput(true)
+      setTimeout(() => inputRef.current?.focus(), 0)
+    } else {
+      setSelectUniversity(value)
+      const selected = universityList.find((u) => u.id === value)
+      setValue('institution', selected?.institution || '')
+      setViewInput(false)
+    }
+  }
+
+  const handleUniversityList = () => {
+    if (newUniversity.trim() !== '') {
+      const newId = (universityList.length + 1).toString()
+      const add = { id: newId, institution: newUniversity.trim() }
+      const updatedUniversityList = [...universityList, add]
+
+      setUniversityList(updatedUniversityList)
+      setSelectUniversity(newId)
+      setValue('institution', add.institution)
+      setNewUniversity('')
+    }
+
+    setViewInput(false)
+  }
+
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
     watch,
     reset,
@@ -145,14 +198,34 @@ const RegistrationForm = () => {
                     <Building className="inline w-4 h-4 mr-2" />
                     Institución / Universidad *
                   </Label>
-                  <Input
-                    id="institution"
-                    type="text"
-                    {...register("institution", { required: true })}
-                    placeholder="Nombre de tu institución o universidad"
-                    className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20"
-                    required
-                  />
+
+                  <select
+                      id="university"
+                      onChange={handleChange}
+                      value={selectUniversity ?? ''}
+                      className="w-full p-2 border rounded-md"
+                  >
+                    <option value="" className="bg-background text-foreground">-- Seleccionar --</option>
+                    {universityList.map((option) => (
+                        <option key={option.id} value={option.id} className="bg-background text-foreground">
+                          {option.institution}
+                        </option>
+                    ))}
+                    <option value="nueva" className="bg-background text-foreground">+ Agregar nueva universidad</option>
+                  </select>
+
+                  {viewInput && (
+                      <Input
+                          ref={inputRef}
+                          type="text"
+                          placeholder="Nombre de la universidad"
+                          className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20 mt-2"
+                          value={newUniversity}
+                          onChange={(e) => setNewUniversity(e.target.value)}
+                          onBlur={handleUniversityList}
+                      />
+                  )}
+
                   {errors.institution && (
                     <p className="text-red-500 text-sm">
                       {errors.institution.message}
