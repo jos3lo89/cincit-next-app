@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Calendar, Ticket } from "lucide-react";
+import { Eye, Ticket } from "lucide-react";
 import CountdownTimer from "./CountdownTimer";
 import TypewriterText from "./TypewriterText";
 import Link from "next/link";
@@ -47,21 +47,21 @@ const HeroSection = () => {
             <div className="flex flex-col sm:flex-row gap-4  justify-center lg:justify-start ">
               <Button
                 size="lg"
-                className="bg-gradient-primary hover:bg-gradient-secondary text-primary-foreground font-semibold px-8 py-4 rounded-xl shadow-glow-primary hover-glow transition-all duration-300"
+                className="bg-gradient-primary cursor-pointer hover:bg-gradient-secondary text-primary-foreground font-semibold px-8 py-4 rounded-xl shadow-glow-primary hover-glow transition-all duration-300"
               >
-                <Ticket className="mr-2 h-5 w-5" />
+                <Ticket className=" h-5 w-5" />
                 Aquire tu entrada
               </Button>
 
               <Button
                 variant="outline"
                 size="lg"
-                className="border-primary/30 text-foreground hover:bg-card-hover px-8 py-4 rounded-xl hover-scale transition-all duration-300"
+                className="border-primary/30 cursor-pointer text-foreground hover:bg-card-hover px-8 py-4 rounded-xl hover-scale transition-all duration-300"
                 asChild
               >
-                <Link href="/schedule">
-                  <Calendar className="mr-2 h-5 w-5" />
-                  Ver Cronograma
+                <Link href="/inscription-status">
+                  <Eye className=" h-5 w-5" />
+                  Estado de inscripción
                 </Link>
               </Button>
             </div>
@@ -109,4 +109,5 @@ const HeroSection = () => {
     </section>
   );
 };
+
 export default HeroSection;

@@ -1,6 +1,6 @@
 "use server";
-import prisma from "@/lib/prisma";
 import { z } from "zod";
+import prisma from "@/lib/prisma";
 import {
   v2 as cloudinary,
   UploadApiErrorResponse,

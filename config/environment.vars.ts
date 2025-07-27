@@ -1,4 +1,4 @@
-import { infer, object, string } from "zod";
+import { infer, number, object, string } from "zod";
 
 const envVar = object({
   DATABASE_URL: string(),
@@ -6,6 +6,11 @@ const envVar = object({
   CLOUDINARY_CLOUD_NAME: string(),
   CLOUDINARY_API_KEY: string(),
   CLOUDINARY_API_SECRET: string(),
+  EMAIL_USER: string(),
+  EMAIL_PASS: string(),
+  EMAIL_HOST: string(),
+  EMAIL_PORT: string(),
+  JWT_SECRET: string(),
 });
 
 envVar.parse(process.env);
