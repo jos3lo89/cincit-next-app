@@ -63,7 +63,13 @@ export default function VerificationForm() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || "Error al enviar el código");
+        if (response.status === 409) {
+          throw new Error(
+            result.error || "El correo electrónico ya se encuentra registrado."
+          );
+        } else {
+          throw new Error(result.error || "Error al enviar el código");
+        }
       }
 
       setEmail(data.email);

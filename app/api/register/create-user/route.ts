@@ -5,7 +5,6 @@ import { uploadToCloudinary } from "@/lib/cloudinary";
 import { registerSchemaApi } from "@/schemas/register.schema";
 import { JWTDecodedPayload } from "@/interfaces/jwt.interface";
 import { verifyToken } from "@/lib/jwt";
-import next from "next";
 
 export const POST = async (req: Request) => {
   try {
