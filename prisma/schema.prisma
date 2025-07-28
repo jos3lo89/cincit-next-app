@@ -158,3 +158,13 @@ model Inscription {
 
   @@map("inscription")
 }
+
+model EmailVerificationCode {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  code      String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([email, expiresAt])
+}

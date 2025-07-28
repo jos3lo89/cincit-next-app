@@ -1,3 +1,5 @@
+"use client";
+
 import ReactConfetti from "react-confetti";
 import { useWindowSize } from "react-use";
 

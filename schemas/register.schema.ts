@@ -29,5 +29,32 @@ export const registrationSchema = z.object({
     ),
 });
 
-// Extraemos el tipo de TypeScript a partir del schema de Zod
 export type RegistrationFormData = z.infer<typeof registrationSchema>;
+
+export const registerSchemaApi = z.object({
+  name: z.string().min(2, "El nombre es muy corto"),
+  lastname: z.string().min(2, "El apellido es muy corto"),
+  dni: z.string().length(8, "El DNI debe tener 8 dígitos"),
+  email: z.email("El correo no es válido"),
+  phone: z.string().length(9, "El teléfono debe tener 9 dígitos"),
+  institution: z.string().min(3, "El nombre de la institución es requerido"),
+  file: z
+    .instanceof(File)
+    .refine((file) => file.size > 0, "El voucher es requerido.")
+    .refine(
+      (file) => file.size <= 5 * 1024 * 1024,
+      "El archivo no debe superar los 5MB."
+    ),
+});
+
+export const EmailFormSchema = z.object({
+  email: z.email("Email inválido"),
+});
+
+export const OTPFormSchema = z.object({
+  email: z.email(),
+  otp: z.string().length(4, "El código debe tener 4 dígitos"),
+});
+
+export type EmailFormData = z.infer<typeof EmailFormSchema>;
+export type OTPFormData = z.infer<typeof OTPFormSchema>;

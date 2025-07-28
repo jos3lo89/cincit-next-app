@@ -1,18 +1,8 @@
 "use server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
-import {
-  v2 as cloudinary,
-  UploadApiErrorResponse,
-  UploadApiResponse,
-} from "cloudinary";
 import { Prisma } from "@prisma/client";
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 const serverRegistrationSchema = z.object({
   name: z.string().min(2),
@@ -27,10 +17,8 @@ const serverRegistrationSchema = z.object({
 export async function registerUserAction(formData: FormData) {
   const data = Object.fromEntries(formData.entries());
   const validation = serverRegistrationSchema.safeParse(data);
-  console.log("data ->", data);
 
   if (!validation.success) {
-    console.error("Validación fallida en el servidor:");
     return { success: false, message: "Los datos enviados no son válidos." };
   }
 
@@ -56,31 +44,10 @@ export async function registerUserAction(formData: FormData) {
       };
     }
 
-    // ----------------- cloudinary
+    // ----------------- cloudinary start
     const buffer = Buffer.from(await voucherFile.arrayBuffer());
-
-    const cloudinaryResponse = await new Promise<UploadApiResponse>(
-      (resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          { resource_type: "auto", folder: "cincit-app" },
-          (
-            error: UploadApiErrorResponse | undefined,
-            result: UploadApiResponse | undefined
-          ) => {
-            if (error) {
-              return reject(error);
-            }
-            if (result) {
-              resolve(result);
-            } else {
-              reject(new Error("Cloudinary did not return a result."));
-            }
-          }
-        );
-        uploadStream.end(buffer);
-      }
-    );
-    // -----------------
+    const cloudinaryResponse = await uploadToCloudinary(buffer, "vouchers");
+    // ----------------- cloudinary end
 
     // ----------------- lolcal en vps
     // const buffer = Buffer.from(await voucherFile.arrayBuffer());
