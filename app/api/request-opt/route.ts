@@ -1,71 +1,96 @@
 import { sendOtpCode } from "@/lib/nodemailer";
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import z from "zod";
+import { randomInt } from "crypto";
 
-export async function POST(req: Request) {
+const requestOtpSchema = z.object({
+  email: z.email(),
+});
+
+const OTP_RESEND_DELAY_SECONDS = 60;
+
+export const POST = async (req: NextRequest) => {
   try {
-    // 1. Get the email from the request body
-    const { email } = await req.json();
+    const body = await req.json();
+    const result = requestOtpSchema.safeParse(body);
 
-    if (!email) {
+    if (!result.success) {
       return NextResponse.json(
-        { message: "Email is required" },
+        { message: "El formato del email no es válido." },
         { status: 400 }
       );
     }
 
-    // 2. Find the user in the database
-    const user = await prisma.user.findUnique({
+    const { email } = result.data;
+
+    const existingUser = await prisma.user.findUnique({
       where: { email },
     });
 
-    if (!user) {
-      // We send a generic success message even if the user is not found
-      // to prevent attackers from guessing which emails are registered.
-      console.log(`OTP request for non-existent user: ${email}`);
-      return NextResponse.json({
-        message: "If an account with this email exists, an OTP has been sent.",
-      });
+    if (!existingUser) {
+      return NextResponse.json(
+        { message: "No existe un usuario registrado con ese correo." },
+        { status: 404 }
+      );
+    }
+    const existingToken = await prisma.verificationToken.findUnique({
+      where: { email },
+    });
+
+    if (existingToken) {
+      const timeSinceLastRequest =
+        new Date().getTime() - existingToken.expires.getTime() + 10 * 60 * 1000;
+      const timeRemaining =
+        OTP_RESEND_DELAY_SECONDS * 1000 - timeSinceLastRequest;
+
+      if (timeRemaining > 0) {
+        return NextResponse.json(
+          {
+            message: `Por favor, espera ${Math.ceil(
+              timeRemaining / 1000
+            )} segundos antes de solicitar otro código.`,
+          },
+          { status: 429 }
+        );
+      }
     }
 
-    // 3. Generate a 4-digit OTP and its expiration date (10 minutes from now)
-    const otpCode = Math.floor(1000 + Math.random() * 9000).toString();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    const otpCode = randomInt(100000, 999999).toString();
+    const expires = new Date(Date.now() + 15 * 60 * 1000);
 
-    // 4. Save or update the OTP in the database using `upsert`
-    // This will create a new OTP record if one doesn't exist for the user,
-    // or update the existing one with the new code and expiration.
-    // await prisma.otp.upsert({
-    //   where: {
-    //     // Assumes your OTP schema has a unique constraint on userId
-    //     userId: user.id,
-    //   },
-    //   update: {
-    //     otpCode: otpCode,
-    //     expiresAt: expiresAt,
-    //     isUsed: false,
-    //   },
-    //   create: {
-    //     userId: user.id,
-    //     otpCode: otpCode,
-    //     expiresAt: expiresAt,
-    //   },
-    // });
+    try {
+      await sendOtpCode(email, otpCode);
+    } catch (error) {
+      console.log("Error al enviar el código de verificación:", error);
+      return NextResponse.json(
+        { message: "no se pudo enviar el correo" },
+        { status: 500 }
+      );
+    }
 
-    // 5. Send the OTP code via email
-    await sendOtpCode(email, otpCode);
-
-    // 6. Return a success message
-    // Note: We use the same generic message as the "user not found" case for security.
-    return NextResponse.json({
-      message: "If an account with this email exists, an OTP has been sent.",
+    await prisma.verificationToken.upsert({
+      where: { email },
+      update: {
+        token: otpCode,
+        expires,
+      },
+      create: {
+        email,
+        token: otpCode,
+        expires,
+      },
     });
-  } catch (error) {
-    // 7. Handle errors
-    console.error("Error in /api/request-otp:", error);
+
+    return NextResponse.json({
+      message: "Código de verificación enviado a tu correo.",
+    });
+  } catch (error: any) {
+    console.log("Error en /api/request-opt:", error);
+
     return NextResponse.json(
-      { message: "An internal server error occurred." },
+      { message: "Ocurrió un error en el servidor." },
       { status: 500 }
     );
   }
-}
+};

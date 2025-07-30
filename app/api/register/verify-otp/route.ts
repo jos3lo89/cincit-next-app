@@ -18,7 +18,7 @@ export const POST = async (req: Request) => {
 
     if (!result.success) {
       return NextResponse.json(
-        { message: "Email is required" },
+        { message: "Datos requeridos no proporcionados." },
         { status: 400 }
       );
     }
@@ -26,7 +26,7 @@ export const POST = async (req: Request) => {
     const { email, code } = result.data;
 
     const existingUser = await prisma.user.findUnique({
-      where: { email: email },
+      where: { email },
     });
 
     if (existingUser) {
@@ -36,7 +36,7 @@ export const POST = async (req: Request) => {
       );
     }
 
-    const verificationCode = await prisma.emailVerificationCode.findUnique({
+    const verificationCode = await prisma.verificationToken.findUnique({
       where: { email },
     });
 
@@ -47,26 +47,28 @@ export const POST = async (req: Request) => {
       );
     }
 
-    const isExpired = verificationCode.expiresAt < new Date();
-    const isCorrect = verificationCode.code === code;
-
-    await prisma.emailVerificationCode.delete({
-      where: { id: verificationCode.id },
-    });
-
-    if (isExpired) {
+    const now = new Date();
+    if (verificationCode.expires < now) {
+      await prisma.verificationToken.delete({
+        where: { id: verificationCode.id },
+      });
       return NextResponse.json(
         { message: "El código de verificación ha expirado." },
         { status: 400 }
       );
     }
 
+    const isCorrect = verificationCode.token === code;
     if (!isCorrect) {
       return NextResponse.json(
         { message: "El código de verificación no es correcto." },
         { status: 400 }
       );
     }
+
+    await prisma.verificationToken.delete({
+      where: { id: verificationCode.id },
+    });
 
     const token = await generateToken<JWTPayload>({
       email,

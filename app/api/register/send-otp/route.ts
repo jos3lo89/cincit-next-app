@@ -1,5 +1,6 @@
 import { sendVerificationOtp } from "@/lib/nodemailer";
 import prisma from "@/lib/prisma";
+import { randomInt } from "crypto";
 import { NextResponse } from "next/server";
 import z from "zod";
 
@@ -11,19 +12,19 @@ export const POST = async (req: Request) => {
   try {
     const body = await req.json();
 
-    const values = serverRegistrationSchema.safeParse(body);
+    const result = serverRegistrationSchema.safeParse(body);
 
-    if (!values.success) {
+    if (!result.success) {
       return NextResponse.json(
-        { message: "Email is required" },
+        { message: "Falta información requerida." },
         { status: 400 }
       );
     }
 
-    const { email } = values.data;
+    const { email } = result.data;
 
     const existingUser = await prisma.user.findUnique({
-      where: { email: email },
+      where: { email },
     });
 
     if (existingUser) {
@@ -33,47 +34,39 @@ export const POST = async (req: Request) => {
       );
     }
 
-    const otpCode = Math.floor(
-      Math.random() * (9999 - 1000 + 1) + 1000
-    ).toString();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
-
-    const verificationCode = await prisma.emailVerificationCode.upsert({
-      where: { email },
-      update: {
-        code: otpCode,
-        expiresAt,
-      },
-      create: {
-        email,
-        code: otpCode,
-        expiresAt,
-      },
-    });
+    const otpCode = randomInt(1000, 9999).toString();
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
     try {
       await sendVerificationOtp(email, otpCode);
-    } catch (emailError) {
-      console.error("Error al enviar el correo de verificación:", emailError);
-
-      await prisma.emailVerificationCode.delete({
-        where: { id: verificationCode.id },
-      });
-
+    } catch (error) {
       return NextResponse.json(
-        {
-          message:
-            "No se pudo enviar el correo de verificación. Inténtalo de nuevo.",
-        },
+        { message: "no se pudo enviar el correo" },
         { status: 500 }
       );
     }
-
-    return NextResponse.json({
-      message: "Código de verificación enviado a tu correo.",
+    await prisma.verificationToken.upsert({
+      where: { email },
+      update: {
+        token: otpCode,
+        expires: expiresAt,
+      },
+      create: {
+        email,
+        token: otpCode,
+        expires: expiresAt,
+      },
     });
+
+    return NextResponse.json(
+      {
+        message: "Código de verificación enviado a tu correo.",
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.log("Error en /api/register/send-otp:", error);
+
     return NextResponse.json(
       { message: "Ocurrió un error en el servidor." },
       { status: 500 }

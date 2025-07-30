@@ -4,6 +4,7 @@ import "./globals.css";
 import "@/config/environment.vars";
 import { ThemeProvider } from "@/components/theme/themeProvider";
 import { Toaster } from "sonner";
+import { SessionProvider } from "next-auth/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,25 +27,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es-PE" suppressHydrationWarning data-scroll-behavior="smooth">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
+    <SessionProvider>
+      <html lang="es-PE" suppressHydrationWarning data-scroll-behavior="smooth">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          {children}
-          <Toaster
-            richColors
-            closeButton
-            duration={3000}
-            position="top-center"
-          />
-        </ThemeProvider>
-      </body>
-    </html>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster
+              richColors
+              closeButton
+              duration={3000}
+              position="top-center"
+            />
+          </ThemeProvider>
+        </body>
+      </html>
+    </SessionProvider>
   );
 }

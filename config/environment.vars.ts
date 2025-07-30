@@ -11,6 +11,7 @@ const envVar = object({
   EMAIL_HOST: string(),
   EMAIL_PORT: string(),
   JWT_SECRET: string(),
+  AUTH_SECRET: string(),
 });
 
 envVar.parse(process.env);

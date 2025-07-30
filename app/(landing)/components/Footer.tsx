@@ -1,9 +1,9 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Facebook,
   Twitter,
   Instagram,
-  Linkedin,
   Mail,
   Phone,
   MapPin,
@@ -13,9 +13,8 @@ import Link from "next/link";
 const Footer = () => {
   const socialLinks = [
     { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Twitter, href: "#", label: "Twitter" },
+    { icon: Twitter, href: "#", label: "X" },
     { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
   ];
 
   const footerLinks = [
@@ -23,43 +22,23 @@ const Footer = () => {
       title: "Evento",
       links: [
         { name: "Cronograma", href: "/schedule" },
-        { name: "Ponentes", href: "/" },
-        // { name: "Talleres", href: "#talleres" },
         { name: "Ubicación", href: "#ubicacion" },
-      ],
-    },
-    {
-      title: "Información",
-      links: [
-        { name: "Sobre CINCIT", href: "#about" },
-        { name: "Patrocinadores", href: "#sponsors" },
-        { name: "Prensa", href: "#press" },
-        { name: "FAQ", href: "#faq" },
-      ],
-    },
-    {
-      title: "Soporte",
-      links: [
-        { name: "Contáctanos", href: "#contact" },
-        { name: "Ayuda", href: "#help" },
-        { name: "Términos", href: "#terms" },
-        { name: "Privacidad", href: "#privacy" },
+        { name: "Ingresar", href: "/signin" },
       ],
     },
   ];
 
   return (
-    <footer className="bg-gradient-to-t from-background-secondary to-background border-t border-border/20">
+    <footer className="bg-gradient-to-t from-background-secondary to-background border-t border-border/20 mb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-1">
               <h3 className="text-3xl font-bold text-gradient mb-4">CINCIT</h3>
               <p className="text-muted-foreground mb-6 leading-relaxed">
-                El evento tecnológico más importante del año, donde la
-                innovación y la inteligencia artificial se encuentran.
+                El evento tecnológico importante del año, donde la innovación y
+                la inteligencia artificial se encuentran.
               </p>
-
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-sm text-muted-foreground">
                   <Mail className="h-4 w-4 text-primary" />
@@ -71,13 +50,13 @@ const Footer = () => {
                 </div>
                 <div className="flex items-center gap-3 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4 text-primary" />
-                  <span>Lima, Perú</span>
+                  <span>Apurimac, Perú</span>
                 </div>
               </div>
             </div>
 
             {footerLinks.map((section) => (
-              <div key={section.title}>
+              <div key={section.title} className="text-center">
                 <h4 className="text-lg font-semibold text-foreground mb-4">
                   {section.title}
                 </h4>
@@ -95,6 +74,13 @@ const Footer = () => {
                 </ul>
               </div>
             ))}
+
+            <div className="lg:col-span-1">
+              <div className="flex flex-wrap justify-center gap-4">
+                <img src="/logoepis.webp" alt="logepis" className="w-32" />
+                <img src="/logounajma.webp" alt="logounajma" className="w-32" />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -109,7 +95,7 @@ const Footer = () => {
                   key={social.label}
                   variant="outline"
                   size="icon"
-                  className="w-10 h-10 rounded-full border-border/30 hover:border-primary/50 hover:bg-card-hover transition-all duration-300"
+                  className="w-10 h-10 rounded-full border-border/30 hover:border-primary/50 hover:bg-card-hover transition-all duration-300 bg-transparent"
                   asChild
                 >
                   <a href={social.href} aria-label={social.label}>
@@ -123,11 +109,15 @@ const Footer = () => {
 
         <div className="py-6 border-t border-border/20">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">
-              © 2025 CINCIT. Todos los derechos reservados.
-            </p>
+            <div className="flex flex-col md:flex-row items-center gap-4">
+              <p className="text-sm text-muted-foreground">
+                © 2025 CINCIT. Todos los derechos reservados.
+              </p>
+            </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <p className="text-sm text-muted-foreground"> {"</>"} 33</p>
+              <div className="flex items-center gap-2">
+                <Badge variant="default">{"</>"} 999</Badge>
+              </div>
             </div>
           </div>
         </div>

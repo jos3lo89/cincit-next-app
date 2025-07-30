@@ -11,14 +11,12 @@ const HeroSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8 animate-fade-in-up">
             <div className="space-y-6">
-              {/* cicnit animacio */}
               <div className="text-center lg:text-left">
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-wider">
                   <TypewriterText text="CINCIT" delay={200} />
                 </h1>
               </div>
 
-              {/* Slogan más pequeño en 2 líneas */}
               <div className="space-y-2 text-center lg:text-left">
                 <h2 className="text-2xl md:text-3xl lg:text-5xl font-bold leading-tight">
                   <span className="text-gradient">Innovación & Tecnología</span>
@@ -27,7 +25,6 @@ const HeroSection = () => {
                 </h2>
               </div>
 
-              {/* Texto descriptivo */}
               <p className="text-lg md:text-xl text-center max-w-full mx-auto lg:text-left text-muted-foreground leading-relaxed ">
                 Únete a los expertos más destacados en{" "}
                 <span className="text-primary font-semibold">
@@ -59,7 +56,7 @@ const HeroSection = () => {
                 className="border-primary/30 cursor-pointer text-foreground hover:bg-card-hover px-8 py-4 rounded-xl hover-scale transition-all duration-300"
                 asChild
               >
-                <Link href="/inscription-status">
+                <Link href="/signin">
                   <Eye className=" h-5 w-5" />
                   Estado de inscripción
                 </Link>
