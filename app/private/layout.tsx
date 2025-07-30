@@ -1,4 +1,6 @@
-import Navbar from "@/components/Navbar";
+import { AppSidebar } from "@/components/sidebar/AppSidebar";
+import SideBarNavMenu from "@/components/sidebar/SidebarNavmenu";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 const PrivateLayout = ({
   children,
@@ -6,10 +8,13 @@ const PrivateLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <>
-      <Navbar />
-      {children}
-    </>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <SideBarNavMenu />
+        <section className="gap-4 p-4">{children}</section>
+      </SidebarInset>
+    </SidebarProvider>
   );
 };
 export default PrivateLayout;
