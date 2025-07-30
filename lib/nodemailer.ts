@@ -16,7 +16,6 @@ export const sendOtpCode = async (email: string, otp: string) => {
     from: '"CINCIT 2025" <noreply@cincit.com>',
     to: email,
     subject: "Bienvenido a CINCIT - Tu código de acceso",
-    // --- INICIO DEL HTML CON ESTILOS ---
     html: `
       <div style="font-family: Arial, sans-serif; text-align: center; color: #333; padding: 20px;">
         <h2>Tu Código de Inicio de Sesión</h2>
@@ -27,7 +26,6 @@ export const sendOtpCode = async (email: string, otp: string) => {
         <p style="font-size: 12px; color: #777;">Si no intentaste iniciar sesión, puedes ignorar este correo de forma segura.</p>
       </div>
     `,
-    // --- FIN DEL HTML CON ESTILOS ---
   };
 
   try {

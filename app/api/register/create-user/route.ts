@@ -75,6 +75,19 @@ export const POST = async (req: Request) => {
     const buffer = Buffer.from(await values.file.arrayBuffer());
     const uploadFile = await uploadToCloudinary(buffer, "vouchers");
 
+    // ----------------- lolcal en vps
+    // const buffer = Buffer.from(await voucherFile.arrayBuffer());
+    // const uploadDir = path.join(process.cwd(), "public/uploads");
+    // const randomNum = Math.floor(100 + Math.random() * 900);
+    // const uniqueFilename = `${Date.now()}-${randomNum}${path.extname(
+    //   voucherFile.name
+    // )}`;
+    // const filePath = path.join(uploadDir, uniqueFilename);
+
+    // await fs.mkdir(uploadDir, { recursive: true });
+    // await fs.writeFile(filePath, buffer);
+    // -----------------
+
     await prisma.$transaction(async (tx) => {
       const newUser = await tx.user.create({
         data: {

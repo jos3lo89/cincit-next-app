@@ -10,13 +10,13 @@ import {
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { verifyOTPCode } from "@/actions/signin.action";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ClipLoader } from "react-spinners";
+import { verifyOTPCode } from "@/actions/auth.action";
 
 const formEmailSchema = z.object({
   email: z.email("El correo no es válido"),

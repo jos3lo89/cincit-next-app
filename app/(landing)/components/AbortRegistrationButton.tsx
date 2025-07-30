@@ -1,4 +1,4 @@
-import { abortRegistration } from "@/actions/registerAuth.action";
+import { abortRegistration } from "@/actions/auth.action";
 import { Button } from "@/components/ui/button";
 
 const AbortRegistrationButton = () => {

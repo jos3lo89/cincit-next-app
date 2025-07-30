@@ -23,21 +23,17 @@ enum Role {
 model User {
   id String @id @default(cuid())
 
-  dni         String @unique @db.Char(8)
-  name        String @db.VarChar(50)
-  lastname    String @db.VarChar(50)
-  email       String @unique @db.VarChar(50)
-  phone       String @db.VarChar(9)
-  institution String @db.VarChar(50)
-
-  role Role @default(PARTICIPANT)
-
-  emailVerified DateTime?
-  image         String?
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
+  dni             String           @unique @db.Char(8)
+  name            String           @db.VarChar(50)
+  lastname        String           @db.VarChar(50)
+  email           String           @unique @db.VarChar(50)
+  phone           String           @db.VarChar(9)
+  institution     String           @db.VarChar(50)
+  role            Role             @default(PARTICIPANT)
+  emailVerified   DateTime?
+  image           String?
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
   vouchers        Voucher[]
   inscriptions    Inscription[]
   userAttendances UserAttendance[]
