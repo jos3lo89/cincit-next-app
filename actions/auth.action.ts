@@ -6,6 +6,7 @@ import { AuthError } from "next-auth";
 
 export async function handleSignOut() {
   await signOut();
+  redirect("/");
 }
 
 export async function abortRegistration() {
