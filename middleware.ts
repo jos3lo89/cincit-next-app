@@ -24,7 +24,7 @@ export default auth(async function middleware(req) {
   console.log({ isLoggedIn, path: nextUrl.pathname });
 
   const isAccessingPrivateRoute = privateRoutes.some((path) =>
-    nextUrl.pathname.startsWith(path)
+    nextUrl.pathname.startsWith(path),
   );
 
   const registrationToken = req.cookies.get("registration_token");
@@ -38,7 +38,10 @@ export default auth(async function middleware(req) {
   }
 
   if (isAccessingPrivateRoute && !isLoggedIn) {
-    return NextResponse.redirect(new URL("/", req.url));
+    // return NextResponse.redirect(new URL("/", req.url));
+    const signInUrl = new URL("/signin", req.url);
+    signInUrl.searchParams.set("callbackUrl", nextUrl.pathname);
+    return NextResponse.redirect(signInUrl);
   }
 
   if (isLoggedIn && isAccessingPrivateRoute) {
