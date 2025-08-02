@@ -4,13 +4,12 @@ import {
   CincitEdition,
   AttendanceType,
   AttendanceState,
-  InscriptionState, // <-- 1. Importa el enum necesario
+  InscriptionState,
 } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 function getAttendanceDates(): Date[] {
-  // Hoy es 1 de agosto de 2025
   const today = new Date("2025-08-01T12:00:00Z");
   const twoWeeksFromNow = new Date(today);
   twoWeeksFromNow.setDate(today.getDate() + 14);
@@ -32,8 +31,6 @@ function getAttendanceDates(): Date[] {
 
 async function main() {
   console.log("🚀 Iniciando el proceso de seeding...");
-
-  // --- 1. Seed de Usuarios Esenciales ---
 
   const adminUser = await prisma.user.upsert({
     where: { email: "ganbaru743@gmail.com" },
@@ -65,11 +62,8 @@ async function main() {
 
   console.log("✅ Usuarios esenciales (admin e inscriptor) creados con éxito.");
 
-  // --- 2. Seed de Inscripciones para Usuarios Esenciales (NUEVA SECCIÓN) ---
   console.log("✍️  Creando inscripciones para usuarios esenciales...");
 
-  // Para asegurar que el script se pueda ejecutar múltiples veces,
-  // eliminamos las inscripciones y vouchers previos de estos usuarios.
   await prisma.inscription.deleteMany({
     where: { userId: { in: [adminUser.id, inscriberUser.id] } },
   });
@@ -77,28 +71,26 @@ async function main() {
     where: { userId: { in: [adminUser.id, inscriberUser.id] } },
   });
 
-  // Crear Voucher e Inscripción para el Admin
   const adminVoucher = await prisma.voucher.create({
     data: {
       userId: adminUser.id,
-      amount: 0, // Monto simbólico para el seed
-      path: "/seed/admin_voucher.png",
+      amount: 0,
+      path: "https://i.pinimg.com/736x/3d/be/40/3dbe40e21f2ab6c4514c24d9e8a04d45.jpg",
     },
   });
   await prisma.inscription.create({
     data: {
       userId: adminUser.id,
       voucherId: adminVoucher.id,
-      state: InscriptionState.approved, // Inscribirlos como 'aprobados'
+      state: InscriptionState.approved,
     },
   });
 
-  // Crear Voucher e Inscripción para el Inscriptor
   const inscriberVoucher = await prisma.voucher.create({
     data: {
       userId: inscriberUser.id,
       amount: 0,
-      path: "/seed/inscriber_voucher.png",
+      path: "https://i.pinimg.com/736x/5d/d3/07/5dd307b9ea068cf7b5346344ed9fa84a.jpg",
     },
   });
   await prisma.inscription.create({
@@ -111,7 +103,6 @@ async function main() {
 
   console.log("✅ Inscripciones para admin e inscriptor creadas con éxito.");
 
-  // --- 3. Seed de Asistencias ---
   console.log("🧹 Limpiando registros de asistencia previos...");
   await prisma.attendance.deleteMany({});
   console.log("🗑️ Registros de asistencia eliminados.");
@@ -120,7 +111,6 @@ async function main() {
 
   await prisma.attendance.createMany({
     data: [
-      // Día 1: Lunes
       {
         date: monday,
         cincitEdition: CincitEdition.E2025,
@@ -133,7 +123,6 @@ async function main() {
         attendanceType: AttendanceType.exit,
         attendanceState: AttendanceState.visible,
       },
-      // Día 2: Martes
       {
         date: tuesday,
         cincitEdition: CincitEdition.E2025,
@@ -146,7 +135,6 @@ async function main() {
         attendanceType: AttendanceType.exit,
         attendanceState: AttendanceState.visible,
       },
-      // Día 3: Miércoles
       {
         date: wednesday,
         cincitEdition: CincitEdition.E2025,
