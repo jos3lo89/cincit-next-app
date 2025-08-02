@@ -39,6 +39,10 @@ export const sideBarData = {
             title: "Aprovados",
             url: "/private/inscriptions/approved",
           },
+          {
+            title: "Rechazados",
+            url: "/private/inscriptions/rejected",
+          },
         ],
       },
       {

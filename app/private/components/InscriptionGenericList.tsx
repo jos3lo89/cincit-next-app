@@ -30,7 +30,7 @@ const debounce = (func: (...args: any[]) => void, delay: number) => {
   };
 };
 
-const InscriptionApprovedList = ({
+const InscriptionGenericList = ({
                                    inscriptions,
                                    handleAction,
                                    loading,
@@ -200,7 +200,7 @@ const InscriptionApprovedList = ({
                           <div className="col-span-1">
                             <Badge
                                 variant={
-                                  inscription.state === "approved" ? "success" : "default"
+                                  inscription.state === "rejected" ? "destructive" : "success"
                                 }
                                 className="flex items-center gap-1"
                             >
@@ -398,4 +398,4 @@ const InscriptionApprovedList = ({
   );
 };
 
-export default InscriptionApprovedList;
+export default InscriptionGenericList;

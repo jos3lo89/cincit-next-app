@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Inscription, Meta } from "@/interfaces/inscription.interface";
 import InscriptionGenericList from "@/app/private/components/InscriptionGenericList";
 
-const PendingInscriptionsPage = () => {
+const PendingRejectedPage = () => {
   const [inscriptions, setInscriptions] = useState<Inscription[]>([]);
   const [meta, setMeta] = useState<Meta | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +21,7 @@ const PendingInscriptionsPage = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `/api/inscription/approved?page=${page}&pageSize=4`
+        `/api/inscription/rejected?page=${page}&pageSize=4`
       );
       const data = await res.json();
 
@@ -75,7 +75,7 @@ const PendingInscriptionsPage = () => {
     <div className="container mx-auto p-4 sm:p-6">
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold">
-          Inscripciones Aprobados
+          Inscripciones Rechazadas
         </h1>
         {meta && !loading && (
           <p className="text-sm text-muted-foreground mt-1">
@@ -133,4 +133,4 @@ const PendingInscriptionsPage = () => {
     </div>
   );
 };
-export default PendingInscriptionsPage;
+export default PendingRejectedPage;

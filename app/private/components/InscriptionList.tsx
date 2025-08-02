@@ -71,7 +71,7 @@ const InscriptionList = ({
               </CardTitle>
               <Badge
                 variant={
-                  inscription.state === "approved" ? "default" : "destructive"
+                  inscription.state === "approved" ? "default" : "warning"
                 }
               >
                 {inscription.state}
