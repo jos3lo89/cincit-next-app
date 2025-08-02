@@ -116,7 +116,7 @@ const Footer = () => {
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <Badge variant="default">{"</>"} 999</Badge>
+                <Badge variant="outline">{"</>"} gothangelsinner</Badge>
               </div>
             </div>
           </div>
