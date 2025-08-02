@@ -1,54 +1,16 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building, CheckCircle, CreditCard, Mail, XCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ImageModal } from "../components/ImageModal";
-import { PacmanLoader } from "react-spinners";
-
-export interface Inscription {
-  id: number;
-  userId: string;
-  voucherId: number;
-  createdAt: string;
-  updatedAt: string;
-  inscriptionType: string;
-  state: string;
-  cincitEdition: string;
-  user: User;
-  voucher: Voucher;
-}
-
-export interface User {
-  id: string;
-  name: string;
-  lastname: string;
-  email: string;
-  dni: string;
-  institution: string;
-}
-
-export interface Voucher {
-  id: number;
-  path: string;
-}
-
-export interface Meta {
-  total: number;
-  page: number;
-  pageSize: number;
-  lastPage: number;
-}
+import InscriptionList from "../components/InscriptionList";
+import { Inscription, Meta } from "@/interfaces/inscription.interface";
 
 const PendingInscriptionsPage = () => {
   const [inscriptions, setInscriptions] = useState<Inscription[]>([]);
   const [meta, setMeta] = useState<Meta | null>(null);
-  const [actionLoading, setActionLoading] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -59,10 +21,9 @@ const PendingInscriptionsPage = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `/api/inscription/pending?page=${page}&pageSize=5`
+        `/api/inscription/pending?page=${page}&pageSize=4`
       );
       const data = await res.json();
-      console.log(data);
 
       if (!res.ok) {
         throw new Error(data.message || "Error al buscar las inscripciones");
@@ -85,15 +46,30 @@ const PendingInscriptionsPage = () => {
     setCurrentPage(page);
   };
 
-  if (loading) {
-    return (
-      <div className="container mx-auto p-4 sm:p-6">
-        <div className="flex items-center justify-center h-64">
-          <PacmanLoader size={40} color="#3b82f6" />
-        </div>
-      </div>
-    );
-  }
+  const handleAction = async (id: number, state: string) => {
+    try {
+      const res = await fetch(
+        `/api/inscription/action?id=${id}&state=${state}`
+      );
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(
+          data.message || "Error canbiar el estado de la inscripción"
+        );
+      }
+
+      toast.success("Cambio de estado realizado exitosamente");
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Error en la solicitud");
+      }
+    } finally {
+      fetchInscriptions(inscriptions.length === 1 ? 1 : currentPage);
+    }
+  };
 
   return (
     <div className="container mx-auto p-4 sm:p-6">
@@ -104,131 +80,57 @@ const PendingInscriptionsPage = () => {
         <p className="text-muted-foreground mt-2">
           Gestiona las inscripciones que están esperando aprobación
         </p>
-        {meta && (
+        {meta && !loading && (
           <p className="text-sm text-muted-foreground mt-1">
             Mostrando {inscriptions.length} de {meta.total} inscripciones
           </p>
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 3xl:grid-cols-3 gap-4">
-        {inscriptions.map((inscription) => (
-          <Card key={inscription.id} className="w-full">
-            <CardHeader className="pb-3">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <CardTitle className="text-lg">
-                  Inscripción #{inscription.id}
-                </CardTitle>
-                <Badge
-                  variant="outline"
-                  className="bg-yellow-50 text-yellow-700 border-yellow-200 w-fit"
-                >
-                  {inscription.state}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid lg:grid-cols-3 gap-4">
-                {/* Información del usuario */}
-                <div className="space-y-3">
-                  <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
-                    Información del Usuario
-                  </h4>
-                  <div className="flex items-center gap-2">
-                    <CreditCard className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                    <span className="font-medium text-sm sm:text-base">
-                      {inscription.user.name} {inscription.user.lastname}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                    <span className="text-xs sm:text-sm break-all">
-                      {inscription.user.email}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CreditCard className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                    <span className="text-xs sm:text-sm">
-                      DNI: {inscription.user.dni}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Building className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                    <span className="text-xs sm:text-sm">
-                      {inscription.user.institution}
-                    </span>
-                  </div>
-                </div>
+      <InscriptionList
+        inscriptions={inscriptions}
+        handleAction={handleAction}
+        loading={loading}
+      />
 
-                <div className="space-y-2">
-                  {/* Información de la inscripción */}
-                  <div className="space-y-3">
-                    <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
-                      Detalles de Inscripción
-                    </h4>
-                    <div className="space-y-2">
-                      <div className="text-xs sm:text-sm">
-                        <span className="font-medium">Tipo:</span>{" "}
-                        {inscription.inscriptionType}
-                      </div>
-                      <div className="text-xs sm:text-sm">
-                        <span className="font-medium">Fecha:</span>{" "}
-                        {new Date(inscription.createdAt).toLocaleDateString(
-                          "es-ES"
-                        )}
-                      </div>
-                    </div>
-                  </div>
+      {meta && meta.lastPage > 1 && (
+        <div className="flex items-center justify-center space-x-2 mt-8">
+          <Button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            size="sm"
+            variant="outline"
+            className="flex items-center gap-1 cursor-pointer"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Anterior
+          </Button>
 
-                  {/* Información del voucher */}
-                  <div className="space-y-3">
-                    <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
-                      Voucher de Pago
-                    </h4>
-                    <div className="space-y-2">
-                      <ImageModal
-                        imagePath={inscription.voucher.path}
-                        altText={`Voucher de pago - Inscripción #${inscription.id}`}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Botones de acción */}
-              <div className="flex flex-col sm:flex-row gap-2 mt-6 pt-4 border-t">
+          <div className="flex items-center space-x-1">
+            {Array.from({ length: meta.lastPage }, (_, i) => i + 1).map(
+              (pageNumber) => (
                 <Button
-                  disabled={actionLoading === inscription.id}
-                  className="flex items-center justify-center gap-2"
+                  key={pageNumber}
+                  onClick={() => handlePageChange(pageNumber)}
+                  disabled={currentPage === pageNumber}
                   size="sm"
+                  className="min-w-[40px]"
                 >
-                  <CheckCircle className="h-4 w-4" />
-                  {actionLoading === inscription.id
-                    ? "Aprobando..."
-                    : "Aprobar"}
+                  {pageNumber}
                 </Button>
-                <Button
-                  disabled={actionLoading === inscription.id}
-                  variant="destructive"
-                  className="flex items-center justify-center gap-2"
-                  size="sm"
-                >
-                  <XCircle className="h-4 w-4" />
-                  {actionLoading === inscription.id
-                    ? "Rechazando..."
-                    : "Rechazar"}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {inscriptions.length === 0 && (
-        <div className="text-center py-12">
-          <div className="text-muted-foreground">
-            No hay inscripciones pendientes en este momento
+              )
+            )}
           </div>
+          <Button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === meta.lastPage}
+            size="sm"
+            variant="outline"
+            className="flex items-center gap-1 cursor-pointer"
+          >
+            Siguiente
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
       )}
     </div>
