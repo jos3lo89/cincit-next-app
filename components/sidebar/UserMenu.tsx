@@ -15,6 +15,7 @@ import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 
 export function UserMenu({ user }: { user: Session["user"] }) {
   const { isMobile } = useSidebar();
@@ -72,7 +73,7 @@ export function UserMenu({ user }: { user: Session["user"] }) {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <UserRound />
-            Mi cuenta
+            <Link href="/private/profile">Mi perfil</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

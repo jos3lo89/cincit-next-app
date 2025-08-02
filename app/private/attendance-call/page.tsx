@@ -50,7 +50,7 @@ const formFindByDniSchema = z.object({
 
 type FormFindByDni = z.infer<typeof formFindByDniSchema>;
 
-const AttendancePage = () => {
+const AttendanceCallPage = () => {
   const [user, setUser] = useState<UserBydni | null>(null);
   const [attendances, setAttendances] = useState<AttendanceActive[]>([]);
   const [attendance, setAttendance] = useState<AttendanceActive | null>(null);
@@ -366,4 +366,4 @@ const AttendancePage = () => {
   );
 };
 
-export default AttendancePage;
+export default AttendanceCallPage;

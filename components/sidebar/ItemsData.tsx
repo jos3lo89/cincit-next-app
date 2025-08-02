@@ -1,4 +1,4 @@
-import { Bot, NotebookTabs, UserPlus } from "lucide-react";
+import { Bot, NotebookTabs, UserPlus, Home } from "lucide-react"; // Asegúrate de importar Home
 
 export const sideBarData = {
   teams: {
@@ -9,6 +9,23 @@ export const sideBarData = {
   navMain: {
     ADMINISTRATOR: [
       {
+        title: "Inicio",
+        url: "/private/admin",
+        icon: Home,
+      },
+      {
+        title: "Asistencia",
+        url: "#",
+        icon: UserPlus,
+        isActive: true,
+        items: [
+          {
+            title: "Llamar lista",
+            url: "/private/attendance-call",
+          },
+        ],
+      },
+      {
         title: "Inscripciones",
         url: "#",
         icon: UserPlus,
@@ -16,7 +33,7 @@ export const sideBarData = {
         items: [
           {
             title: "Pendientes",
-            url: "#",
+            url: "/private/pending-inscriptions",
           },
         ],
       },
@@ -50,18 +67,41 @@ export const sideBarData = {
 
     INSCRIBER: [
       {
-        title: "Inscripciones",
+        title: "Inicio",
+        url: "/private/attendance",
+        icon: Home,
+      },
+      {
+        title: "Asistencia",
         url: "#",
         icon: UserPlus,
         isActive: true,
         items: [
           {
+            title: "Llamar lista",
+            url: "/private/attendance",
+          },
+        ],
+      },
+      {
+        title: "Inscripciones",
+        url: "#",
+        icon: UserPlus,
+        items: [
+          {
             title: "Pendientes",
-            url: "#",
+            url: "/private/pending-inscriptions",
           },
         ],
       },
     ],
-    PARTICIPANT: [],
+
+    PARTICIPANT: [
+      {
+        title: "Página Principal",
+        url: "/",
+        icon: Home,
+      },
+    ],
   },
 };

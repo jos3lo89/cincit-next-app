@@ -1,53 +1,63 @@
 import { NextResponse } from "next/server";
 import { auth } from "./auth";
 
-const privateAdminRoutes = ["/private/admin"];
-const privateInscriberRoutes = ["/private/attendance"];
-const privateParticipantRoutes = ["/inscription-state"];
-const privateRoutes = [
-  ...privateAdminRoutes,
-  ...privateInscriberRoutes,
-  ...privateParticipantRoutes,
-];
-
 const roleRedirects: Record<string, string> = {
   ADMINISTRATOR: "/private/admin",
   INSCRIBER: "/private/attendance",
   PARTICIPANT: "/inscription-state",
 };
 
+const allowedRoutesByRole: Record<string, string[]> = {
+  ADMINISTRATOR: [
+    "/private/admin",
+    "/private/attendance",
+    "/private/pending-inscriptions",
+  ],
+  INSCRIBER: [
+    "/private/attendance",
+    "/private/attendance-call",
+    "/private/pending-inscriptions",
+  ],
+  PARTICIPANT: ["/inscription-state"],
+};
+
 export default auth(async function middleware(req) {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-  const userRole = req.auth?.user?.role;
+  const userRole = req.auth?.user?.role as keyof typeof roleRedirects;
 
-  console.log({ isLoggedIn, path: nextUrl.pathname });
+  console.log({ isLoggedIn, path: nextUrl.pathname, role: userRole });
 
-  const isAccessingPrivateRoute = privateRoutes.some((path) =>
-    nextUrl.pathname.startsWith(path),
-  );
+  const isAccessingPrivateRoute =
+    nextUrl.pathname.startsWith("/private/") ||
+    nextUrl.pathname.startsWith("/inscription-state");
 
   const registrationToken = req.cookies.get("registration_token");
   if (nextUrl.pathname.startsWith("/register") && !registrationToken) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  if (nextUrl.pathname.startsWith("/signin") && isLoggedIn) {
-    const redirectUrl = roleRedirects[userRole as string] || "/";
-    return NextResponse.redirect(new URL(redirectUrl, req.url));
-  }
-
   if (isAccessingPrivateRoute && !isLoggedIn) {
-    // return NextResponse.redirect(new URL("/", req.url));
     const signInUrl = new URL("/signin", req.url);
     signInUrl.searchParams.set("callbackUrl", nextUrl.pathname);
     return NextResponse.redirect(signInUrl);
   }
 
+  if (nextUrl.pathname.startsWith("/signin") && isLoggedIn) {
+    const redirectUrl = roleRedirects[userRole] || "/";
+    return NextResponse.redirect(new URL(redirectUrl, req.url));
+  }
+
   if (isLoggedIn && isAccessingPrivateRoute) {
-    const userAllowedUrl = roleRedirects[userRole as string];
-    if (!nextUrl.pathname.startsWith(userAllowedUrl)) {
-      return NextResponse.redirect(new URL(userAllowedUrl, req.url));
+    const allowedRoutes = allowedRoutesByRole[userRole] || [];
+
+    const isPathAllowed = allowedRoutes.some((path) =>
+      nextUrl.pathname.startsWith(path)
+    );
+
+    if (!isPathAllowed) {
+      const defaultRedirectUrl = roleRedirects[userRole] || "/";
+      return NextResponse.redirect(new URL(defaultRedirectUrl, req.url));
     }
   }
 
