@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Eye, Ticket } from "lucide-react";
 import CountdownTimer from "./CountdownTimer";
-import TypewriterText from "./TypewriterText";
 import Link from "next/link";
+import MatrixText from "@/components/MatrixText";
 
 const HeroSection = () => {
   return (
@@ -13,7 +13,7 @@ const HeroSection = () => {
             <div className="space-y-6">
               <div className="text-center lg:text-left">
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-wider">
-                  <TypewriterText text="CINCIT" delay={200} />
+                  <MatrixText text="CINCIT" />
                 </h1>
               </div>
 
