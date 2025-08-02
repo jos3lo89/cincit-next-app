@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ImageModal } from "../components/ImageModal";
 import { PacmanLoader } from "react-spinners";
-import { Pagination } from "../components/Pagination";
 
 export interface Inscription {
   id: number;
@@ -231,14 +230,6 @@ const PendingInscriptionsPage = () => {
             No hay inscripciones pendientes en este momento
           </div>
         </div>
-      )}
-
-      {meta && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={meta.lastPage}
-          onPageChange={handlePageChange}
-        />
       )}
     </div>
   );
