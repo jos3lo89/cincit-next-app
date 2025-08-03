@@ -14,6 +14,7 @@ const allowedRoutesByRole: Record<string, string[]> = {
     "/private/pending-inscriptions",
     "/private/inscriptions/approved",
     "/private/inscriptions/rejected",
+    "/private/profile",
   ],
   INSCRIBER: [
     "/private/attendance",
@@ -21,6 +22,7 @@ const allowedRoutesByRole: Record<string, string[]> = {
     "/private/pending-inscriptions",
     "/private/inscriptions/approved",
     "/private/inscriptions/rejected",
+    "/private/profile",
   ],
   PARTICIPANT: ["/inscription-state"],
 };

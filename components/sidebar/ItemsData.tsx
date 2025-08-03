@@ -100,6 +100,14 @@ export const sideBarData = {
             title: "Pendientes",
             url: "/private/pending-inscriptions",
           },
+          {
+            title: "Aprovados",
+            url: "/private/inscriptions/approved",
+          },
+          {
+            title: "Rechazados",
+            url: "/private/inscriptions/rejected",
+          },
         ],
       },
     ],
