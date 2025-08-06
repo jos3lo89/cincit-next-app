@@ -113,7 +113,7 @@ const MatrixText = ({
       //     color: "rgb(var(--foreground-rgb))",
       // },
       matrix: {
-        color: "#00ff00",
+        color: "#155dfc",
         textShadow: "0 2px 4px rgba(0, 255, 0, 0.5)",
       },
       // normal: {

@@ -29,7 +29,11 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Confetti from "@/components/Confetti";
 
-const RegistrationForm = () => {
+type RegisterPageProps = {
+  email: string;
+};
+
+const RegistrationForm = ({ email }: RegisterPageProps) => {
   const [selectUniversity, setSelectUniversity] = useState<string | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [universityList, setUniversityList] = useState<InstitutionUser[]>([]);
@@ -90,6 +94,9 @@ const RegistrationForm = () => {
     reset,
   } = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
+    defaultValues: {
+      email: email,
+    },
   });
 
   const voucherFile = watch("voucher");
@@ -302,6 +309,7 @@ const RegistrationForm = () => {
                       id="email"
                       autoComplete="on"
                       type="email"
+                      readOnly
                       {...register("email", { required: true })}
                       placeholder="Nombre de tu institución o universidad"
                       className="glass border-border/30 focus:border-primary/50 focus:ring-primary/20"

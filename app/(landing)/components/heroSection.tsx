@@ -1,10 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { Eye, Ticket } from "lucide-react";
+import { Eye, Facebook, Instagram, Ticket, Twitter } from "lucide-react";
 import CountdownTimer from "./CountdownTimer";
 import Link from "next/link";
 import MatrixText from "@/components/MatrixText";
 
 const HeroSection = () => {
+  const socialLinks = [
+    { icon: Facebook, href: "#", label: "Facebook" },
+    { icon: Twitter, href: "#", label: "X" },
+    { icon: Instagram, href: "#", label: "Instagram" },
+  ];
+
   return (
     <section className="min-h-screen pt-4 pb-1 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -78,7 +84,6 @@ const HeroSection = () => {
               </div>
             </div>
           </div>
-
           <div className="flex justify-center lg:justify-end animate-fade-in-up">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-primary opacity-20 blur-3xl rounded-full animate-glow"></div>

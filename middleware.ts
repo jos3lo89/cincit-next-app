@@ -15,6 +15,9 @@ const allowedRoutesByRole: Record<string, string[]> = {
     "/private/inscriptions/approved",
     "/private/inscriptions/rejected",
     "/private/profile",
+    "/private/attendance-control",
+    "/private/change-role",
+    "/private/reports",
   ],
   INSCRIBER: [
     "/private/attendance",

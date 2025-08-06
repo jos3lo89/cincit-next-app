@@ -1,4 +1,5 @@
 import { Bot, NotebookTabs, UserPlus, Home } from "lucide-react"; // Asegúrate de importar Home
+import { title } from "process";
 
 export const sideBarData = {
   teams: {
@@ -22,6 +23,10 @@ export const sideBarData = {
           {
             title: "Llamar lista",
             url: "/private/attendance-call",
+          },
+          {
+            title: "Activar llamada",
+            url: "/private/attendance-control",
           },
         ],
       },
@@ -52,7 +57,7 @@ export const sideBarData = {
         items: [
           {
             title: "Asistentes",
-            url: "#",
+            url: "/private/reports",
           },
         ],
       },
@@ -68,6 +73,10 @@ export const sideBarData = {
           {
             title: "Administradores",
             url: "#",
+          },
+          {
+            title: "Cambiar rol",
+            url: "/private/change-role",
           },
         ],
       },
