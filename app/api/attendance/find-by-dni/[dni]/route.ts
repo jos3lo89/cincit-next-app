@@ -3,11 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   _: NextRequest,
-  { params }: { params: Promise<{ dni: string }> }
+  { params }: { params: Promise<{ dni: string }> },
 ) {
   try {
     const { dni } = await params;
 
+    // TODO: Revisar implementación
     const user = await prisma.user.findUnique({
       where: {
         dni,
@@ -22,7 +23,7 @@ export async function GET(
     if (!user) {
       return NextResponse.json(
         { message: "No se encontró el usuario." },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -31,7 +32,7 @@ export async function GET(
     console.log("error: /api/attendance/find-by-dni/:dni", error);
     return NextResponse.json(
       { message: "Error interno del  servidor." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

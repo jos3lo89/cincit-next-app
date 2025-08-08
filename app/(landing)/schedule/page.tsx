@@ -1,6 +1,10 @@
+import { getSettings } from "@/lib/settings";
 import ScheduleTimeline from "../components/ScheduleTimeline";
+import ComingSoon from "../components/ComingSoon";
 
-const SchedulePage = () => {
+const SchedulePage = async () => {
+  const mostrar = await getSettings("showSpeakersPage", false);
+
   return (
     <>
       <section className="pt-10  px-4 sm:px-6 lg:px-8">
@@ -10,16 +14,18 @@ const SchedulePage = () => {
             <br />
             <span className="text-foreground">CINCIT 2025</span>
           </h1>
-          <p
-            className="text-xl text-muted-foreground max-w-3xl mx-auto animate-fade-in-up"
-            style={{ animationDelay: "0.2s" }}
-          >
-            Descubre el programa completo de ponencias, talleres y actividades
-            durante los tres días del evento.
-          </p>
+          {mostrar && (
+            <p
+              className="text-xl text-muted-foreground max-w-3xl mx-auto animate-fade-in-up"
+              style={{ animationDelay: "0.2s" }}
+            >
+              Descubre el programa completo de ponencias, talleres y actividades
+              durante los tres días del evento.
+            </p>
+          )}
         </div>
       </section>
-      <ScheduleTimeline />
+      {mostrar ? <ScheduleTimeline /> : <ComingSoon />}
     </>
   );
 };

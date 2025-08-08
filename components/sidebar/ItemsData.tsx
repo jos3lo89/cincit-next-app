@@ -1,4 +1,4 @@
-import { Bot, NotebookTabs, UserPlus, Home } from "lucide-react"; // Asegúrate de importar Home
+import { Bot, NotebookTabs, UserPlus, Home, Settings } from "lucide-react"; // Asegúrate de importar Home
 import { title } from "process";
 
 export const sideBarData = {
@@ -77,6 +77,17 @@ export const sideBarData = {
           {
             title: "Cambiar rol",
             url: "/private/change-role",
+          },
+        ],
+      },
+      {
+        title: "Configuración",
+        url: "#",
+        icon: Settings,
+        items: [
+          {
+            title: "Sistema",
+            url: "/private/settings",
           },
         ],
       },

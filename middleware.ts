@@ -18,6 +18,7 @@ const allowedRoutesByRole: Record<string, string[]> = {
     "/private/attendance-control",
     "/private/change-role",
     "/private/reports",
+    "/private/settings",
   ],
   INSCRIBER: [
     "/private/attendance",
@@ -61,7 +62,7 @@ export default auth(async function middleware(req) {
     const allowedRoutes = allowedRoutesByRole[userRole] || [];
 
     const isPathAllowed = allowedRoutes.some((path) =>
-      nextUrl.pathname.startsWith(path)
+      nextUrl.pathname.startsWith(path),
     );
 
     if (!isPathAllowed) {
