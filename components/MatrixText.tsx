@@ -31,7 +31,7 @@ interface MatrixTextProps {
 const MatrixText = ({
   text = "HelloWorld!",
   className,
-  initialDelay = 200,
+  initialDelay = 350,
   letterAnimationDuration = 500,
   letterInterval = 100,
 }: MatrixTextProps) => {
@@ -127,7 +127,7 @@ const MatrixText = ({
   return (
     <div
       className={cn(
-        " bg-gradient-to-r from-blue-500 via-violet-600 to-cyan-700 bg-clip-text text-transparent drop-shadow-lg",
+        " bg-gradient-to-r from-blue-500  to-cyan-700 bg-clip-text text-transparent drop-shadow-lg",
         className
       )}
       aria-label="Matrix text animation"

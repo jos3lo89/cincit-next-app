@@ -32,7 +32,7 @@ const HeroSection = () => {
               </div>
 
               <p className="text-lg md:text-xl text-center max-w-full mx-auto lg:text-left text-muted-foreground leading-relaxed ">
-                Únete a los expertos más destacados en{" "}
+                Únete al evento de los expertos más destacados en{" "}
                 <span className="text-primary font-semibold">
                   Inteligencia Artificial
                 </span>{" "}
@@ -41,9 +41,6 @@ const HeroSection = () => {
             </div>
 
             <div className="space-y-4 text-center lg:text-left">
-              <h3 className="text-lg font-semibold text-muted-foreground">
-                El evento comienza en:
-              </h3>
               <CountdownTimer />
             </div>
 

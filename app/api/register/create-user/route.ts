@@ -14,12 +14,34 @@ export const POST = async (req: Request) => {
 
     const file = formData.get("file");
 
-    if (!file || !(file instanceof File) || file.size === 0) {
+    // if (!file || !(file instanceof File) || file.size === 0) {
+    //   return NextResponse.json(
+    //     { message: "El voucher es requerido." },
+    //     { status: 400 }
+    //   );
+    // }
+
+    // ----- INICIO DE LA CORRECCIÓN -----
+
+    // 1. Guarda de Tipo (Type Guard)
+    // Verificamos si 'file' es un string o si no existe. En ambos casos, es inválido.
+    if (!file || typeof file === "string") {
       return NextResponse.json(
-        { message: "El voucher es requerido." },
+        { message: "El voucher es un campo requerido." },
         { status: 400 }
       );
     }
+
+    // 2. Validaciones de tamaño
+    // Después de la guarda, TypeScript ya sabe que 'file' es un objeto tipo File.
+    // Ahora podemos acceder a 'file.size' de forma segura.
+    if (file.size === 0) {
+      return NextResponse.json(
+        { message: "El archivo del voucher no puede estar vacío." },
+        { status: 400 }
+      );
+    }
+
     if (file.size > 5 * 1024 * 1024) {
       // 5MB
       return NextResponse.json(
@@ -27,6 +49,8 @@ export const POST = async (req: Request) => {
         { status: 400 }
       );
     }
+
+    // ----- FIN DE LA CORRECCIÓN -----
 
     const data = Object.fromEntries(formData.entries());
 
