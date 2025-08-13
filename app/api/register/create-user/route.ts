@@ -11,6 +11,23 @@ export const POST = async (req: Request) => {
     const qki = await cookies();
     const tokenCookie = qki.get("registration_token");
     const formData = await req.formData();
+
+    const file = formData.get("file");
+
+    if (!file || !(file instanceof File) || file.size === 0) {
+      return NextResponse.json(
+        { message: "El voucher es requerido." },
+        { status: 400 }
+      );
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      // 5MB
+      return NextResponse.json(
+        { message: "El archivo no debe superar los 5MB." },
+        { status: 400 }
+      );
+    }
+
     const data = Object.fromEntries(formData.entries());
 
     const result = registerSchemaApi.safeParse(data);
@@ -72,7 +89,8 @@ export const POST = async (req: Request) => {
       );
     }
 
-    const buffer = Buffer.from(await values.file.arrayBuffer());
+    // const buffer = Buffer.from(await values.file.arrayBuffer());
+    const buffer = Buffer.from(await file.arrayBuffer());
     const uploadFile = await uploadToCloudinary(buffer, "vouchers");
 
     // ----------------- lolcal en vps

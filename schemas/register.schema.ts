@@ -31,6 +31,17 @@ export const registrationSchema = z.object({
 
 export type RegistrationFormData = z.infer<typeof registrationSchema>;
 
+// 2. ESQUEMA PARA LA API (SIN EL CAMPO 'file')
+// Usamos .omit() para crear una copia del esquema cliente sin el campo 'file'.
+// Esto se usará en tu ruta API del servidor.
+// export const registerSchemaApi = registrationSchema.omit({
+//   voucher: true,
+// });
+
+// // También exportamos los tipos de TypeScript si los necesitas en otros lugares.
+// // export type RegisterFormClient = z.infer<typeof registrationSchema>;
+// export type RegisterFormApi = z.infer<typeof registerSchemaApi>;
+
 export const registerSchemaApi = z.object({
   name: z.string().min(2, "El nombre es muy corto"),
   lastname: z.string().min(2, "El apellido es muy corto"),
@@ -38,13 +49,13 @@ export const registerSchemaApi = z.object({
   email: z.email("El correo no es válido"),
   phone: z.string().length(9, "El teléfono debe tener 9 dígitos"),
   institution: z.string().min(3, "El nombre de la institución es requerido"),
-  file: z
-    .instanceof(File)
-    .refine((file) => file.size > 0, "El voucher es requerido.")
-    .refine(
-      (file) => file.size <= 5 * 1024 * 1024,
-      "El archivo no debe superar los 5MB."
-    ),
+  // file: z
+  //   .instanceof(File)
+  //   .refine((file) => file.size > 0, "El voucher es requerido.")
+  //   .refine(
+  //     (file) => file.size <= 5 * 1024 * 1024,
+  //     "El archivo no debe superar los 5MB."
+  //   ),
 });
 
 export const EmailFormSchema = z.object({
