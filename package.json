@@ -7,7 +7,13 @@
     "build": "next build",
     "start": "next start -p 4000",
     "lint": "next lint",
-    "postinstall": "bunx prisma generate"
+    "postinstall": "bunx prisma generate",
+    "seed:all": "bun run seed:1 && bun run seed:2",
+    "seed:1": "bun prisma/seed/seed.ts",
+    "seed:2": "bun prisma/seed/seed-users.ts"
+  },
+  "prisma": {
+    "seed": "npm run seed:all"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",

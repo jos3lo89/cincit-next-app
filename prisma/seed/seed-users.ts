@@ -7,7 +7,7 @@ const participantsData = [
     dni: "71234567",
     name: "Juan",
     lastname: "Perez Quispe",
-    email: "juan.perez@example.com",
+    email: "ganbaru743@gmail.com",
     phone: "987654321",
     institution: "UNMSM",
     voucherPath:
