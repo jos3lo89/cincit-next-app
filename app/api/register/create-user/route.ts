@@ -67,31 +67,31 @@ export const POST = async (req: Request) => {
 
     const values = result.data;
 
-    if (!tokenCookie) {
-      return NextResponse.json(
-        { message: "No autorizado: falta el token de verificación." },
-        { status: 401 }
-      );
-    }
+    // if (!tokenCookie) {
+    //   return NextResponse.json(
+    //     { message: "No autorizado: falta el token de verificación." },
+    //     { status: 401 }
+    //   );
+    // }
 
-    const payload = await verifyToken<JWTDecodedPayload>(tokenCookie.value);
+    // const payload = await verifyToken<JWTDecodedPayload>(tokenCookie.value);
 
-    if (!payload) {
-      return NextResponse.json(
-        { message: "No autorizado: falta el token de verificación." },
-        { status: 401 }
-      );
-    }
+    // if (!payload) {
+    //   return NextResponse.json(
+    //     { message: "No autorizado: falta el token de verificación." },
+    //     { status: 401 }
+    //   );
+    // }
 
-    if (
-      payload.purpose !== "complete-registration" ||
-      payload.email !== values.email
-    ) {
-      return NextResponse.json(
-        { message: "No autorizado: el token no es válido." },
-        { status: 401 }
-      );
-    }
+    // if (
+    //   payload.purpose !== "complete-registration" ||
+    //   payload.email !== values.email
+    // ) {
+    //   return NextResponse.json(
+    //     { message: "No autorizado: el token no es válido." },
+    //     { status: 401 }
+    //   );
+    // }
 
     const emailExists = await prisma.user.findUnique({
       where: { email: values.email },
@@ -149,7 +149,7 @@ export const POST = async (req: Request) => {
 
       const newVoucher = await tx.voucher.create({
         data: {
-          path: filePath,
+          path: `/uploads/${uniqueFilename}`,
           amount: 0,
           userId: newUser.id,
         },
