@@ -153,7 +153,7 @@ const RegistrationForm = ({ email }: RegisterPageProps) => {
           <Card className="glass-card shadow-custom-lg animate-fade-in-up">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl font-bold text-gradient mb-2">
-                Registro de Participantes
+                Registro
               </CardTitle>
               <CardDescription></CardDescription>
             </CardHeader>
@@ -396,9 +396,9 @@ const RegistrationForm = ({ email }: RegisterPageProps) => {
                   Información importante:
                 </h4>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• Tu registro será validado en un máximo de 24 horas</li>
-                  <li>• Recibirás un email de confirmación</li>
-                  <li>• Conserva tu voucher de pago como respaldo</li>
+                  <li>• Tu registro será validado en un máximo de 24 horas.</li>
+                  <li>• Recibirás un email de confirmación.</li>
+                  <li>• Conserva tu voucher de pago como respaldo.</li>
                 </ul>
               </div>
             </CardContent>

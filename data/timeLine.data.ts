@@ -3,14 +3,14 @@ import type { ScheduleEvent } from "@/interfaces/timeLine.interface";
 export const scheduleData: { [key: string]: ScheduleEvent[] } = {
   dia1: [
     {
-      time: "09:00 - 09:30",
+      time: "08:00 - 09:00",
       type: "ceremonia",
       title: "Presentación del Evento",
       description: "Bienvenida oficial y presentación de CINCIT 2025",
       location: "Auditorio Principal",
     },
     {
-      time: "09:30 - 11:30",
+      time: "09:00 - 11:00",
       type: "ponencia",
       title: "Fundamentos de Inteligencia Artificial en el Siglo XXI",
       description:
@@ -29,14 +29,7 @@ export const scheduleData: { [key: string]: ScheduleEvent[] } = {
       location: "Auditorio Principal",
     },
     {
-      time: "11:30 - 12:00",
-      type: "descanso",
-      title: "Coffee Break & Networking",
-      description: "Pausa para networking y refrigerio",
-      location: "Hall Principal",
-    },
-    {
-      time: "12:00 - 13:30",
+      time: "11:00 - 13:00",
       type: "ponencia",
       title: "Procesamiento de Lenguaje Natural: Del Texto a la Comprensión",
       description:
@@ -58,7 +51,7 @@ export const scheduleData: { [key: string]: ScheduleEvent[] } = {
     {
       time: "14:00 - 18:00",
       type: "talleres",
-      title: "Talleres Prácticos de Deep Learning",
+      title: "Talleres Prácticos",
       description:
         "Sesiones hands-on con tecnologías de vanguardia en machine learning",
       location: "Laboratorios A, B y C",
@@ -186,16 +179,13 @@ export const eventDays = [
   {
     date: "15 Agosto 2025",
     day: "Día 1",
-    subtitle: "Inauguración y Fundamentos de IA",
   },
   {
     date: "16 Agosto 2025",
     day: "Día 2",
-    subtitle: "Aplicaciones Prácticas y Casos de Uso",
   },
   {
     date: "17 Agosto 2025",
     day: "Día 3",
-    subtitle: "Futuro de la Tecnología y Clausura",
   },
 ];

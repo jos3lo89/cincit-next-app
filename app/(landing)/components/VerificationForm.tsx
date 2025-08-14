@@ -32,7 +32,6 @@ import { toast } from "sonner";
 export default function VerificationForm() {
   const [step, setStep] = useState<"email" | "otp">("email");
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -48,7 +47,6 @@ export default function VerificationForm() {
   });
 
   const onEmailSubmit = async (data: EmailFormData) => {
-    setLoading(true);
     setError("");
 
     try {
@@ -78,13 +76,10 @@ export default function VerificationForm() {
       toast.success("Código enviado a tu correo electrónico");
     } catch (error) {
       setError(error instanceof Error ? error.message : "Error desconocido");
-    } finally {
-      setLoading(false);
     }
   };
 
   const onOTPSubmit = async (data: OTPFormData) => {
-    setLoading(true);
     setError("");
 
     try {
@@ -108,8 +103,6 @@ export default function VerificationForm() {
       router.push("/register");
     } catch (error) {
       setError(error instanceof Error ? error.message : "Error desconocido");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -127,23 +120,55 @@ export default function VerificationForm() {
       >
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-1xl text-center md:text-2xl font-bold text-gradient mb-2">
-              Verificación de Email
+            <CardTitle className="text-lg text-center font-bold text-gradient mb-2">
+              Primero verifica tu correo electrónico
             </CardTitle>
             <CardDescription>
               <div className="p-4 glass rounded-xl">
                 <h4 className="font-semibold text-foreground mb-2">
                   Pasos para registrarse:
                 </h4>
-                <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>. Ingresa tu correo electrónico</li>
-                  <li>. Recibirás un código de verificación en tu correo</li>
-                  <li>. Ingresa el código para validar tu correo</li>
-                  <li>
-                    . Completa el formulario de inscripción con tu voucher de
-                    pago
+
+                <ul
+                  className="text-sm text-muted-foreground space-y-1"
+                  style={{ listStyleType: "disc", paddingLeft: "1.5rem" }}
+                >
+                  <li
+                    style={{ listStylePosition: "outside", fontSize: "1.2em" }}
+                  >
+                    <span style={{ fontSize: "0.875rem" }}>
+                      Ingresa tu correo electrónico.
+                    </span>
                   </li>
-                  <li>. Conserva tu voucher de pago como respaldo</li>
+                  <li
+                    style={{ listStylePosition: "outside", fontSize: "1.2em" }}
+                  >
+                    <span style={{ fontSize: "0.875rem" }}>
+                      Recibirás un código de verificación.
+                    </span>
+                  </li>
+                  <li
+                    style={{ listStylePosition: "outside", fontSize: "1.2em" }}
+                  >
+                    <span style={{ fontSize: "0.875rem" }}>
+                      Ingresa el código para validar tu correo.
+                    </span>
+                  </li>
+                  <li
+                    style={{ listStylePosition: "outside", fontSize: "1.2em" }}
+                  >
+                    <span style={{ fontSize: "0.875rem" }}>
+                      Completa el formulario de inscripción con tu voucher de
+                      pago.
+                    </span>
+                  </li>
+                  <li
+                    style={{ listStylePosition: "outside", fontSize: "1.2em" }}
+                  >
+                    <span style={{ fontSize: "0.875rem" }}>
+                      Conserva tu voucher de pago como respaldo.
+                    </span>
+                  </li>
                 </ul>
               </div>
             </CardDescription>
@@ -178,9 +203,9 @@ export default function VerificationForm() {
               <Button
                 type="submit"
                 className="w-full cursor-pointer "
-                disabled={loading}
+                disabled={emailForm.formState.isSubmitting}
               >
-                {loading ? (
+                {emailForm.formState.isSubmitting ? (
                   <ClipLoader color="#fff" size={23} />
                 ) : (
                   "Enviar Código"
@@ -242,9 +267,9 @@ export default function VerificationForm() {
               <Button
                 type="submit"
                 className="w-full cursor-pointer"
-                disabled={loading}
+                disabled={otpForm.formState.isSubmitting}
               >
-                {loading ? (
+                {otpForm.formState.isSubmitting ? (
                   <ClipLoader color="#fff" size={23} />
                 ) : (
                   "Verificar Código"

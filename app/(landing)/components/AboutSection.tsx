@@ -13,7 +13,7 @@ const AboutSection = () => {
       icon: Users,
       title: "Networking",
       description:
-        "Conecta con profesionales, investigadores y líderes tecnológicos del país.",
+        "Conecta con profesionales, investigadores y líderes tecnológicos.",
       gradient: "from-secondary to-accent",
     },
     {
@@ -27,7 +27,7 @@ const AboutSection = () => {
       icon: Target,
       title: "Casos Prácticos",
       description:
-        "Aprende de implementaciones reales y casos de éxito en el mercado peruano.",
+        "Aprende de talleres reales y casos practicos durante el evento.",
       gradient: "from-primary to-accent",
     },
   ];
@@ -41,10 +41,10 @@ const AboutSection = () => {
             <span className="text-foreground">CINCIT</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            CINCIT es el evento tecnológico más importante del año, donde
-            convergen las mentes más brillantes para compartir conocimientos
-            sobre inteligencia artificial y avances tecnológicos que están
-            moldeando nuestro futuro.
+            CINCIT es un evento anual organizado por la Escuela Profesional de
+            Ingeniería de Sistemas de la Universidad Nacional José María
+            Arguedas, donde convergen ponentes destacados para compartir
+            conocimientos y tecnologías que están moldeando nuestro futuro.
           </p>
         </div>
 

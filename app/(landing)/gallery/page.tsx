@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
+import MatrixText from "@/components/MatrixText";
 
 const GalleryPage = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -53,40 +54,16 @@ const GalleryPage = () => {
 
   return (
     <div className="min-h-screen mb-16">
-      <header className="text-center py-16 px-4 relative overflow-hidden">
-        <div className="relative z-10">
-          <div className="inline-block mb-6">
-            <div
-              className="text-6xl md:text-8xl font-black bg-gradient-to-r from-purple-900 via-pink-900 to-blue-900 bg-clip-text"
-              style={{
-                textShadow: "0 0 30px rgba(139, 92, 246, 0.3)",
-                animation: "pulse 3s ease-in-out infinite",
-              }}
-            >
-              CINCIT
-            </div>
-          </div>
-
-          <h2 className="text-2xl md:text-4xl font-bold text-gray-500 mb-4">
-            Explora Nuestra Trayectoria Visual
-          </h2>
-
-          <p className="text-lg md:text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed">
-            Descubre la evolución y los momentos más destacados a través de esta
-            colección de imágenes que narran nuestra historia y crecimiento
-          </p>
-
-          <div className="flex justify-center mt-8">
-            <div
-              className="h-1 w-32 rounded-full"
-              style={{
-                background: "linear-gradient(90deg, #8b5cf6, #06b6d4, #8b5cf6)",
-                backgroundSize: "200% 100%",
-                animation: "gradient-shift 3s ease infinite",
-              }}
-            />
+      <header className="text-center py-4 px-4">
+        <div className="inline-block mb-2">
+          <div className="text-6xl md:text-6xl font-black">
+            <MatrixText text="Galeria" />
           </div>
         </div>
+
+        <h2 className="text-xl font-bold text-gray-500 mb-4">
+          Explora Nuestra Trayectoria Visual
+        </h2>
       </header>
 
       <section className="container mx-auto px-4 pb-16">

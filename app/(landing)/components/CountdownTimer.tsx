@@ -16,7 +16,7 @@ const calculateTimeLeft = (distance: number) => {
 };
 
 const CountdownTimer = () => {
-  const eventDate = new Date("2025-08-13T18:10:00").getTime();
+  const eventDate = new Date("2025-08-17T09:00:00").getTime();
 
   const getInitialState = () => {
     const now = new Date().getTime();
@@ -34,7 +34,6 @@ const CountdownTimer = () => {
   const [timeLeft, setTimeLeft] = useState(getInitialState().initialTime);
 
   useEffect(() => {
-    // Si el evento ya está activo al cargar, no necesitamos iniciar el intervalo.
     if (isEventActive) return;
 
     const timer = setInterval(() => {
@@ -51,9 +50,8 @@ const CountdownTimer = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isEventActive, eventDate]); // Se añade isEventActive a las dependencias
+  }, [isEventActive, eventDate]);
 
-  // El resto del componente no cambia...
   const timeUnits = [
     { label: "Días", value: timeLeft.days },
     { label: "Horas", value: timeLeft.hours },
@@ -63,16 +61,10 @@ const CountdownTimer = () => {
 
   if (isEventActive) {
     return (
-      <div className="text-center animate-fade-in-up">
-        <h2 className="text-3xl font-bold text-gradient">
-          ¡El evento está en curso!
+      <div className="text-center lg:text-left">
+        <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-500  to-cyan-700 bg-clip-text text-transparent animate-pulse">
+          ¡EVENTO EN CURSO!
         </h2>
-        <Link
-          href="/schedule"
-          className="text-lg text-blue-400 hover:text-blue-300 transition-colors underline"
-        >
-          Ver cronograma
-        </Link>
       </div>
     );
   }

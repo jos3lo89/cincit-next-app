@@ -73,7 +73,7 @@ const HeroSection = () => {
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-gradient-secondary rounded-full animate-glow"></div>
-                <span>Apurimac, Perú</span>
+                <span>Andahuaylas, Apurimac, Perú</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-gradient-primary rounded-full animate-glow"></div>
