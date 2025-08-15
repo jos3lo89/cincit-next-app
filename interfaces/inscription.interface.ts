@@ -22,7 +22,9 @@ export interface User {
 
 export interface Voucher {
   id: number;
-  path: string;
+  url: string;
+  urlfull: string;
+  imgId: string;
 }
 
 export interface Meta {

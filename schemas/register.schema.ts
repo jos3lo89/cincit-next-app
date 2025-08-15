@@ -49,13 +49,11 @@ export const registerSchemaApi = z.object({
   email: z.email("El correo no es válido"),
   phone: z.string().length(9, "El teléfono debe tener 9 dígitos"),
   institution: z.string().min(3, "El nombre de la institución es requerido"),
-  // file: z
-  //   .instanceof(File)
-  //   .refine((file) => file.size > 0, "El voucher es requerido.")
-  //   .refine(
-  //     (file) => file.size <= 5 * 1024 * 1024,
-  //     "El archivo no debe superar los 5MB."
-  //   ),
+  voucher: z.object({
+    id: z.string(),
+    url: z.string(),
+    urlFull: z.string(),
+  }),
 });
 
 export const EmailFormSchema = z.object({

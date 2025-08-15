@@ -52,7 +52,7 @@ export function UserMenu({ user }: { user: Session["user"] }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-        side={isMobile ? "bottom" : "right"} // ✨ Y usar la variable aquí
+        side={isMobile ? "bottom" : "right"}
         align="end"
         sideOffset={4}
       >
@@ -73,7 +73,7 @@ export function UserMenu({ user }: { user: Session["user"] }) {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <UserRound />
-            <Link href="/private/profile">Mi perfil</Link>
+            <Link href="/private/user/profile">Mi perfil</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

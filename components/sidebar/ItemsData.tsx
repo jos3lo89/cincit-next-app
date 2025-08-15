@@ -25,7 +25,7 @@ export const sideBarData = {
             url: "/private/attendance-call",
           },
           {
-            title: "Activar llamada",
+            title: "Control de asistencia",
             url: "/private/attendance-control",
           },
         ],
@@ -37,8 +37,12 @@ export const sideBarData = {
         isActive: true,
         items: [
           {
+            title: "Todos",
+            url: "/private/inscriptions/all",
+          },
+          {
             title: "Pendientes",
-            url: "/private/pending-inscriptions",
+            url: "/private/inscriptions/pending",
           },
           {
             title: "Aprovados",
@@ -67,27 +71,8 @@ export const sideBarData = {
         icon: Bot,
         items: [
           {
-            title: "Inscriptores",
-            url: "#",
-          },
-          {
-            title: "Administradores",
-            url: "#",
-          },
-          {
             title: "Cambiar rol",
-            url: "/private/change-role",
-          },
-        ],
-      },
-      {
-        title: "Configuración",
-        url: "#",
-        icon: Settings,
-        items: [
-          {
-            title: "Sistema",
-            url: "/private/settings",
+            url: "/private/user/change-role",
           },
         ],
       },

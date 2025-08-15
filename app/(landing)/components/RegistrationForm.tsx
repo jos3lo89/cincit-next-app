@@ -28,6 +28,11 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Confetti from "@/components/Confetti";
+import {
+  deleteVoucherImage,
+  submitRegistration,
+  uploadVoucherImage,
+} from "@/utils/registerUser.util";
 
 type RegisterPageProps = {
   email: string;
@@ -104,44 +109,29 @@ const RegistrationForm = ({ email }: RegisterPageProps) => {
     voucherFile?.[0]?.name || "Haz clic para subir tu voucher";
 
   const onSubmit = async (data: RegistrationFormData) => {
-    const formData = new FormData();
-    formData.append("name", data.firstName);
-    formData.append("lastname", data.lastName);
-    formData.append("dni", data.dni);
-    formData.append("email", data.email);
-    formData.append("institution", data.institution);
-    formData.append("phone", data.telephone);
-
-    if (data.voucher && data.voucher.length > 0) {
-      formData.append("file", data.voucher[0]);
+    if (!data.voucher || data.voucher.length === 0) {
+      toast.error("Error", {
+        description: "No se ha seleccionado ningún archivo.",
+      });
+      return;
     }
 
+    let voucherData;
+
     try {
-      const response = await fetch("/api/register/create-user", {
-        method: "POST",
-        body: formData,
-      });
+      voucherData = await uploadVoucherImage(data.voucher[0]);
+    } catch {
+      return;
+    }
 
-      const result = await response.json();
-
-      if (response.ok) {
-        setShowConfetti(true);
-        toast.success("¡Éxito!", {
-          description: result.message,
-        });
-        reset();
-        router.push("/");
-        window.scrollTo(0, 0);
-      } else {
-        toast.error("Error en el registro", {
-          description: result.message || "No se pudo completar el registro.",
-        });
-      }
-    } catch (error) {
-      console.error("Error al enviar el formulario:", error);
-      toast.error("Error de Red", {
-        description: "No se pudo conectar con el servidor. Inténtalo de nuevo.",
-      });
+    const success = await submitRegistration(data, voucherData);
+    if (!success) {
+      await deleteVoucherImage(voucherData.id);
+    } else {
+      setShowConfetti(true);
+      reset();
+      router.push("/");
+      window.scrollTo(0, 0);
     }
   };
 
