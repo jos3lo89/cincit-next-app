@@ -1,5 +1,4 @@
-import { Bot, NotebookTabs, UserPlus, Home, Settings } from "lucide-react"; // Asegúrate de importar Home
-import { title } from "process";
+import { Bot, NotebookTabs, UserPlus, Home } from "lucide-react";
 
 export const sideBarData = {
   teams: {
@@ -102,8 +101,12 @@ export const sideBarData = {
         icon: UserPlus,
         items: [
           {
+            title: "Todos",
+            url: "/private/inscriptions/all",
+          },
+          {
             title: "Pendientes",
-            url: "/private/pending-inscriptions",
+            url: "/private/inscriptions/pending",
           },
           {
             title: "Aprovados",
