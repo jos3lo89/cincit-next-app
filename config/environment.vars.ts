@@ -12,6 +12,9 @@ const envVar = object({
   AUTH_URL: string(),
   NEXT_PUBLIC_URL_IMG_SERVICE: string(),
   MY_URL_SITE: string(),
+  POSTGRES_USER: string(),
+  POSTGRES_PASSWORD: string(),
+  POSTGRES_DB: string(),
 });
 
 envVar.parse(process.env);
