@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const calculateTimeLeft = (distance: number) => {
@@ -18,30 +17,32 @@ const calculateTimeLeft = (distance: number) => {
 const CountdownTimer = () => {
   const eventDate = new Date("2025-08-17T09:00:00").getTime();
 
-  const getInitialState = () => {
-    const now = new Date().getTime();
-    const distance = eventDate - now;
-    return {
-      isActive: distance <= 0,
-      initialTime: calculateTimeLeft(distance),
-    };
-  };
-
-  const [isEventActive, setIsEventActive] = useState(
-    getInitialState().isActive
-  );
-
-  const [timeLeft, setTimeLeft] = useState(getInitialState().initialTime);
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+  const [isEventActive, setIsEventActive] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    if (isEventActive) return;
+    setIsMounted(true);
+
+    const now = new Date().getTime();
+    const distance = eventDate - now;
+
+    if (distance <= 0) {
+      setIsEventActive(true);
+      return;
+    }
+
+    setTimeLeft(calculateTimeLeft(distance));
 
     const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = eventDate - now;
-
-      if (distance > 0) {
-        setTimeLeft(calculateTimeLeft(distance));
+      const newDistance = eventDate - new Date().getTime();
+      if (newDistance > 0) {
+        setTimeLeft(calculateTimeLeft(newDistance));
       } else {
         setIsEventActive(true);
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -50,7 +51,7 @@ const CountdownTimer = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isEventActive, eventDate]);
+  }, [eventDate]);
 
   const timeUnits = [
     { label: "Días", value: timeLeft.days },
@@ -59,10 +60,30 @@ const CountdownTimer = () => {
     { label: "Seg", value: timeLeft.seconds },
   ];
 
+  if (!isMounted) {
+    return (
+      <>
+        <h3 className="text-lg font-semibold text-muted-foreground">
+          El evento comienza en:
+        </h3>
+        <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+          {["Días", "Horas", "Min", "Seg"].map((label) => (
+            <div key={label} className="glass-card p-4 rounded-xl text-center">
+              <div className="text-3xl font-bold text-gradient mb-1">00</div>
+              <div className="text-sm text-muted-foreground font-medium">
+                {label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  }
+
   if (isEventActive) {
     return (
       <div className="text-center lg:text-left">
-        <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-500  to-cyan-700 bg-clip-text text-transparent animate-pulse">
+        <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-500 to-cyan-700 bg-clip-text text-transparent animate-pulse">
           ¡EVENTO EN CURSO!
         </h2>
       </div>
@@ -78,7 +99,7 @@ const CountdownTimer = () => {
         {timeUnits.map((unit, index) => (
           <div
             key={unit.label}
-            className="glass-card p-4 rounded-xl text-center hover-glow animate-fade-in-up cursor-default"
+            className="glass-card p-4 rounded-xl text-center hover-glow cursor-default"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             <div className="text-3xl font-bold text-gradient mb-1">
