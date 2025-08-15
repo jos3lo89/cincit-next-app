@@ -5,7 +5,10 @@ export const GET = async (req: NextRequest) => {
   try {
     const searchParams = req.nextUrl.searchParams;
     const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
-    const pageSize = Math.min(50, Math.max(1, parseInt(searchParams.get("pageSize") ?? "10", 10)));
+    const pageSize = Math.min(
+      50,
+      Math.max(1, parseInt(searchParams.get("pageSize") ?? "10", 10))
+    );
 
     const skip = (page - 1) * pageSize;
 
@@ -16,10 +19,7 @@ export const GET = async (req: NextRequest) => {
         },
         skip,
         take: pageSize,
-        orderBy: [
-          { updatedAt: "desc" },
-          { createdAt: "desc" }
-        ],
+        orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
         include: {
           user: {
             select: {
@@ -34,14 +34,16 @@ export const GET = async (req: NextRequest) => {
           voucher: {
             select: {
               id: true,
-              path: true,
+              url: true,
+              urlfull: true,
+              imgId: true,
             },
           },
         },
       }),
       prisma.inscription.count({
         where: {
-          state: "rejected"
+          state: "rejected",
         },
       }),
     ]);
@@ -49,8 +51,8 @@ export const GET = async (req: NextRequest) => {
     // Validación adicional de los datos
     if (!inscriptions) {
       return NextResponse.json(
-          { message: "No se encontraron inscripciones." },
-          { status: 404 }
+        { message: "No se encontraron inscripciones." },
+        { status: 404 }
       );
     }
 
@@ -66,11 +68,11 @@ export const GET = async (req: NextRequest) => {
   } catch (error) {
     console.error("[API] Error en /api/inscription/rejected:", error);
     return NextResponse.json(
-        {
-          message: "Ocurrió un error al obtener las inscripciones aprobadas.",
-          error: process.env.NODE_ENV === "development" ? error : undefined
-        },
-        { status: 500 }
+      {
+        message: "Ocurrió un error al obtener las inscripciones aprobadas.",
+        error: process.env.NODE_ENV === "development" ? error : undefined,
+      },
+      { status: 500 }
     );
   }
 };

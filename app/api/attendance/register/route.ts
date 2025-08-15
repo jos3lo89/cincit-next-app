@@ -24,10 +24,9 @@ export const POST = async (req: NextRequest) => {
 
     const { userId, attendanceId } = result.data;
 
-    const userExist = await prisma.user.findUnique({
+    const userExist = await prisma.user.findFirst({
       where: {
         id: userId,
-        // incluir que se acepto su inscripcion
       },
     });
 
@@ -52,6 +51,26 @@ export const POST = async (req: NextRequest) => {
         { message: "Este usuario ya registró su asistencia." },
         { status: 409 }
       );
+    }
+
+    const attendance = await prisma.attendance.findFirst({
+      where: {
+        id: attendanceId,
+      },
+    });
+
+    if (!attendance) {
+      return NextResponse.json({
+        message: "No se encontró la asistencia.",
+        status: 404,
+      });
+    }
+
+    if (attendance.attendanceState !== "visible") {
+      return NextResponse.json({
+        message: "La asistencia ya no esta disponible.",
+        status: 403,
+      });
     }
 
     const userAttendance = await prisma.userAttendance.create({

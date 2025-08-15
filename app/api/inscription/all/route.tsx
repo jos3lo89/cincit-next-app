@@ -15,9 +15,6 @@ export const GET = async (req: NextRequest) => {
     // Corrección: el count debe ser para "approved" no "pending"
     const [inscriptions, total] = await prisma.$transaction([
       prisma.inscription.findMany({
-        where: {
-          state: "approved",
-        },
         skip,
         take: pageSize,
         orderBy: [
@@ -45,11 +42,7 @@ export const GET = async (req: NextRequest) => {
           },
         },
       }),
-      prisma.inscription.count({
-        where: {
-          state: "approved",
-        },
-      }),
+      prisma.inscription.count(),
     ]);
 
     // Validación adicional de los datos

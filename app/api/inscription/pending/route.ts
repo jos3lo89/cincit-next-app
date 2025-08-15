@@ -29,7 +29,9 @@ export const GET = async (req: NextRequest) => {
           voucher: {
             select: {
               id: true,
-              path: true,
+              url: true,
+              urlfull: true,
+              imgId: true,
             },
           },
         },
