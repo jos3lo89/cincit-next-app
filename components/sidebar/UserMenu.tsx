@@ -1,6 +1,6 @@
 "use client";
 
-import { CardSim, ChevronsUpDown, LogOut, UserRound } from "lucide-react";
+import { ChevronsUpDown, Eye, LogOut, UserRound } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -79,7 +79,7 @@ export function UserMenu({ user }: { user: Session["user"] }) {
           </DropdownMenuItem>
 
           <DropdownMenuItem>
-            <CardSim />
+            <Eye />
             <Link className="w-full" href="/private/inscriptions/me">
               Mi inscripcion
             </Link>
