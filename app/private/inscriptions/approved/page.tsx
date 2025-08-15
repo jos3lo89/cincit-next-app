@@ -72,23 +72,26 @@ const PendingInscriptionsPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 sm:p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">
+    <div className=" ">
+      <div>
+        <h4 className="text-xl sm:text-2xl font-semibold">
           Inscripciones Aprobados
-        </h1>
+        </h4>
         {meta && !loading && (
           <p className="text-sm text-muted-foreground mt-1">
             Mostrando {inscriptions.length} de {meta.total} inscripciones
+            aprovadas
           </p>
         )}
       </div>
 
-      <InscriptionGenericList
-        inscriptions={inscriptions}
-        handleAction={handleAction}
-        loading={loading}
-      />
+      <div className="w-full overflow-hidden grid grid-cols-1">
+        <InscriptionGenericList
+          inscriptions={inscriptions}
+          handleAction={handleAction}
+          loading={loading}
+        />
+      </div>
 
       {meta && meta.lastPage > 1 && (
         <div className="flex items-center justify-center space-x-2 mt-8">

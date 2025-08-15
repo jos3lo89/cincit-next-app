@@ -35,25 +35,15 @@ export default async function AdminPage() {
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto space-y-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-3 md:grid-cols-3 gap-4">
           <Link href="/private/attendance-call" className="group">
             <Button
               variant="outline"
               className="w-full h-24 flex flex-col gap-3  shadow-sm hover:shadow-md"
             >
               <Phone className="w-8 h-8 text-blue-600 group-hover:scale-110 transition-transform" />
-              <span className="text-sm font-medium">Llamar Asistencia</span>
-            </Button>
-          </Link>
-
-          <Link href="/private/pending-inscriptions" className="group">
-            <Button
-              variant="outline"
-              className="w-full h-24 flex flex-col gap-3  shadow-sm hover:shadow-md"
-            >
-              <Clock className="w-8 h-8 text-yellow-600 group-hover:scale-110 transition-transform" />
-              <span className="text-sm font-medium ">
-                Inscripciones Pendientes
+              <span className="text-sm font-medium whitespace-normal text-center">
+                Llamar Asistencia
               </span>
             </Button>
           </Link>
@@ -64,7 +54,9 @@ export default async function AdminPage() {
               className="w-full h-24 flex flex-col gap-3  shadow-sm hover:shadow-md"
             >
               <CheckCircle className="w-8 h-8 text-green-600 group-hover:scale-110 transition-transform" />
-              <span className="text-sm font-medium ">Activar Llamada</span>
+              <span className="text-sm font-medium whitespace-normal text-center">
+                Activar Llamada
+              </span>
             </Button>
           </Link>
 
@@ -74,13 +66,15 @@ export default async function AdminPage() {
               className="w-full h-24 flex flex-col gap-3  shadow-sm hover:shadow-md"
             >
               <FileText className="w-8 h-8 text-purple-600 group-hover:scale-110 transition-transform" />
-              <span className="text-sm font-medium ">Reportes</span>
+              <span className="text-sm font-medium whitespace-normal text-center">
+                Reportes
+              </span>
             </Button>
           </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Link href="/private/all-inscriptions" className="group">
+          <Link href="/private/inscriptions/all" className="group">
             <Card className="shadow-sm hover:shadow-lg border-0 hover:border-blue-200 cursor-pointer">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium ">
@@ -95,15 +89,11 @@ export default async function AdminPage() {
                 <div className="text-3xl font-bold text-blue-600 mb-2">
                   {inscriptionStats.total}
                 </div>
-                <p className="text-xs flex items-center">
-                  <TrendingUp className="inline w-3 h-3 mr-1 text-green-500" />
-                  +12% desde el mes pasado
-                </p>
               </CardContent>
             </Card>
           </Link>
 
-          <Link href="/private/approved-inscriptions" className="group">
+          <Link href="/private/inscriptions/approved" className="group">
             <Card className="shadow-sm hover:shadow-lg border-0 hover:border-blue-200 cursor-pointer">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium ">
@@ -118,18 +108,11 @@ export default async function AdminPage() {
                 <div className="text-3xl font-bold text-green-600 mb-2">
                   {inscriptionStats.approved}
                 </div>
-                <p className="text-xs">
-                  {(
-                    (inscriptionStats.approved / inscriptionStats.total) *
-                    100
-                  ).toFixed(1)}
-                  % del total
-                </p>
               </CardContent>
             </Card>
           </Link>
 
-          <Link href="/private/pending-inscriptions" className="group">
+          <Link href="/private/inscriptions/pending" className="group">
             <Card className="shadow-sm hover:shadow-lg border-0 hover:border-blue-200 cursor-pointer">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium ">
@@ -144,12 +127,11 @@ export default async function AdminPage() {
                 <div className="text-3xl font-bold text-yellow-600 mb-2">
                   {inscriptionStats.pending}
                 </div>
-                <p className="text-xs">Requieren revisión</p>
               </CardContent>
             </Card>
           </Link>
 
-          <Link href="/private/rejected-inscriptions" className="group">
+          <Link href="/private/inscriptions/rejected" className="group">
             <Card className="shadow-sm hover:shadow-lg border-0 hover:border-blue-200 cursor-pointer">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium ">
@@ -164,13 +146,6 @@ export default async function AdminPage() {
                 <div className="text-3xl font-bold text-red-600 mb-2">
                   {inscriptionStats.rejected}
                 </div>
-                <p className="text-xs">
-                  {(
-                    (inscriptionStats.rejected / inscriptionStats.total) *
-                    100
-                  ).toFixed(1)}
-                  % del total
-                </p>
               </CardContent>
             </Card>
           </Link>

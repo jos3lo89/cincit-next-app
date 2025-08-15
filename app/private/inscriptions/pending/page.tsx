@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import InscriptionList from "../../components/InscriptionList";
 import { Inscription, Meta } from "@/interfaces/inscription.interface";
+
 import InscriptionGenericList from "@/app/private/components/InscriptionGenericList";
 
-const PendingRejectedPage = () => {
+const PendingInscriptionsPage = () => {
   const [inscriptions, setInscriptions] = useState<Inscription[]>([]);
   const [meta, setMeta] = useState<Meta | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +23,7 @@ const PendingRejectedPage = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `/api/inscription/rejected?page=${page}&pageSize=4`
+        `/api/inscription/pending?page=${page}&pageSize=4`
       );
       const data = await res.json();
 
@@ -74,13 +76,15 @@ const PendingRejectedPage = () => {
   return (
     <div className="">
       <div className="mb-6">
-        <h1 className="text-xl sm:text-2xl font-semibold">
-          Inscripciones Rechazadas
+        <h1 className="text-xl sm:text-2xl font-bold">
+          Inscripciones Pendientes
         </h1>
+        <p className="text-muted-foreground mt-2">
+          Inscripciones en espera de aprobación
+        </p>
         {meta && !loading && (
-          <p className="text-sm text-muted-foreground ">
+          <p className="text-sm text-muted-foreground mt-1">
             Mostrando {inscriptions.length} de {meta.total} inscripciones
-            rechazadas
           </p>
         )}
       </div>
@@ -136,4 +140,4 @@ const PendingRejectedPage = () => {
     </div>
   );
 };
-export default PendingRejectedPage;
+export default PendingInscriptionsPage;

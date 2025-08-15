@@ -54,7 +54,7 @@ const AttendanceCallPage = () => {
   const [user, setUser] = useState<UserBydni | null>(null);
   const [attendances, setAttendances] = useState<AttendanceActive[]>([]);
   const [attendance, setAttendance] = useState<AttendanceActive | null>(null);
-  const [isSearching, setIsSearching] = useState(false);
+  // const [isSearching, setIsSearching] = useState(false);
   const [isLoadingAttendances, setIsLoadingAttendances] = useState(false);
   const [isMarkingAttendance, setIsMarkingAttendance] = useState(false);
 
@@ -70,7 +70,7 @@ const AttendanceCallPage = () => {
   };
 
   const handleSubmitFindByDni = async (values: FormFindByDni) => {
-    setIsSearching(true);
+    // setIsSearching(true);
     try {
       const res = await fetch(`/api/attendance/find-by-dni/${values.dni}`);
       const data = await res.json();
@@ -80,13 +80,12 @@ const AttendanceCallPage = () => {
       }
 
       setUser(data);
-      setAttendance(null); // Reset selected attendance
-      toast.success("Usuario encontrado exitosamente");
+      setAttendance(null);
     } catch (error: any) {
       toast.error(error.message || "Error al buscar el usuario");
       setUser(null);
     } finally {
-      setIsSearching(false);
+      // setIsSearching(false);
     }
   };
 
@@ -133,6 +132,10 @@ const AttendanceCallPage = () => {
         throw new Error(data.message || "Error al marcar la asistencia");
       }
 
+      if (data.status === 403) {
+        throw new Error("La asistencia ya no esta disponible.");
+      }
+
       toast.success("Asistencia marcada exitosamente");
       setUser(null);
       setAttendance(null);
@@ -166,8 +169,8 @@ const AttendanceCallPage = () => {
       string,
       "default" | "secondary" | "destructive" | "outline"
     > = {
-      entrance: "default",
-      exit: "destructive",
+      entrance: "secondary",
+      exit: "default",
       break: "secondary",
     };
     return variants[type] || "outline";
@@ -178,8 +181,8 @@ const AttendanceCallPage = () => {
   }, []);
 
   return (
-    <div className="p-4">
-      <div className="max-w-4xl mx-auto space-y-4">
+    <>
+      <div className="max-w-xl mx-auto space-y-2 mb-20">
         <div className="rounded-lg shadow-md p-4 max-w-md mx-auto ">
           <div className="flex items-center gap-2 mb-3">
             <User className="h-4 w-4 text-blue-500" />
@@ -201,7 +204,7 @@ const AttendanceCallPage = () => {
                         type="number"
                         placeholder="12345678"
                         {...field}
-                        disabled={isSearching}
+                        disabled={form.formState.isSubmitting}
                         className="h-8 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                       />
                     </FormControl>
@@ -211,10 +214,10 @@ const AttendanceCallPage = () => {
               />
               <Button
                 type="submit"
-                disabled={isSearching}
+                disabled={form.formState.isSubmitting}
                 className="w-full h-8 text-sm text-white cursor-pointer bg-blue-600 hover:bg-blue-700 transition-colors"
               >
-                {isSearching ? (
+                {form.formState.isSubmitting ? (
                   <>
                     <ClipLoader size={12} color="white" className="mr-2" />
                     Buscando...
@@ -228,15 +231,15 @@ const AttendanceCallPage = () => {
         </div>
 
         {user && (
-          <div className="rounded-lg shadow-md p-4">
-            <div className="flex items-center gap-2 mb-3">
+          <>
+            <div className="flex items-center gap-2 mb-2">
               <User className="h-4 w-4 text-green-600" />
               <p className="font-medium text-gray-300">Usuario Encontrado</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-gray-800 rounded-md p-2">
                 <p className="text-xs text-gray-400 mb-1">Nombre</p>
-                <p className="font-medium text-sm text-gray-300">
+                <p className="font-medium text-sm text-gray-300 truncate">
                   {user.name} {user.lastname}
                 </p>
               </div>
@@ -257,11 +260,11 @@ const AttendanceCallPage = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </>
         )}
 
         {user && (
-          <div className="rounded-lg shadow-md p-2">
+          <div className=" p-2">
             <div className="flex items-center gap-2 mb-3">
               <Calendar className="h-4 w-4 text-purple-600" />
               <p className="font-medium text-gray-300">
@@ -325,16 +328,10 @@ const AttendanceCallPage = () => {
 
         {user && attendance && (
           <div className="max-w-sm mx-auto">
-            <div className=" rounded-lg shadow-md p-2">
+            <div className="p-2">
               <div className="text-center space-y-3">
                 <div className="rounded-md p-3">
-                  <p className="text-sm text-gray-300 mb-1">
-                    Confirmar asistencia para:
-                  </p>
-                  <p className="font-medium text-sm text-gray-400">
-                    {user.name} {user.lastname}
-                  </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-400">
                     {formatDate(attendance.date)} -{" "}
                     {getAttendanceTypeLabel(attendance.attendanceType)}
                   </p>
@@ -362,7 +359,7 @@ const AttendanceCallPage = () => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import InscriptionList from "../components/InscriptionList";
 import { Inscription, Meta } from "@/interfaces/inscription.interface";
+import InscriptionGenericList from "@/app/private/components/InscriptionGenericList";
+import InscriptionList from "../../components/InscriptionList";
 
-const PendingInscriptionsPage = () => {
+const AllInscriptionsPage = () => {
   const [inscriptions, setInscriptions] = useState<Inscription[]>([]);
   const [meta, setMeta] = useState<Meta | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,9 +21,7 @@ const PendingInscriptionsPage = () => {
   const fetchInscriptions = async (page: number) => {
     try {
       setLoading(true);
-      const res = await fetch(
-        `/api/inscription/pending?page=${page}&pageSize=4`
-      );
+      const res = await fetch(`/api/inscription/all?page=${page}&pageSize=4`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -72,26 +71,25 @@ const PendingInscriptionsPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 sm:p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">
-          Inscripciones Pendientes
-        </h1>
-        <p className="text-muted-foreground mt-2">
-          Gestiona las inscripciones que están esperando aprobación
-        </p>
+    <div className=" ">
+      <div>
+        <h4 className="text-xl sm:text-2xl font-semibold">
+          Total de inscritos
+        </h4>
         {meta && !loading && (
           <p className="text-sm text-muted-foreground mt-1">
-            Mostrando {inscriptions.length} de {meta.total} inscripciones
+            Mostrando {inscriptions.length} de {meta.total} total inscripciones
           </p>
         )}
       </div>
 
-      <InscriptionList
-        inscriptions={inscriptions}
-        handleAction={handleAction}
-        loading={loading}
-      />
+      <div className="w-full overflow-hidden grid grid-cols-1">
+        <InscriptionList
+          inscriptions={inscriptions}
+          handleAction={handleAction}
+          loading={loading}
+        />
+      </div>
 
       {meta && meta.lastPage > 1 && (
         <div className="flex items-center justify-center space-x-2 mt-8">
@@ -136,4 +134,4 @@ const PendingInscriptionsPage = () => {
     </div>
   );
 };
-export default PendingInscriptionsPage;
+export default AllInscriptionsPage;

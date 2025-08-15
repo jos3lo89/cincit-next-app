@@ -104,9 +104,9 @@ const AttendanceControlPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-xl font-bold mb-2">Gestión de Asistencias</h1>
+    <div className="container max-w-3xl mx-auto p-2 ">
+      <div className="mb-3 text-center">
+        <h4 className="text-xl font-bold mb-2">Control de Asistencias</h4>
       </div>
 
       <div className="space-y-6">

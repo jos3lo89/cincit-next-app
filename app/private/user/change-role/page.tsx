@@ -13,7 +13,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Search, User, UserCheck } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowRight,
+  CheckCircle2,
+  Loader2,
+  RefreshCw,
+  Search,
+  User,
+  UserCheck,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -26,7 +35,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export interface User {
+export interface UserInterface {
   id: string;
   dni: string;
   name: string;
@@ -42,7 +51,10 @@ export interface User {
 }
 
 const formSchema = z.object({
-  dni: z.string().min(8).max(8),
+  dni: z
+    .string()
+    .min(8, "El DNI debe tener 8 dígitos")
+    .max(8, "El DNI debe tener 8 dígitos"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -66,15 +78,15 @@ const roleColors = {
 } as const;
 
 const ChangeRolePage = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isSearching, setIsSearching] = useState(false);
-  const [isChangingRole, setIsChangingRole] = useState(false);
+  const [user, setUser] = useState<UserInterface | null>(null);
+  const [searchAttempted, setSearchAttempted] = useState(false);
 
   const {
     register,
     handleSubmit,
     reset: resetSearch,
-    formState: { errors },
+    watch,
+    formState: { errors, isSubmitting: isSearching },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -86,7 +98,7 @@ const ChangeRolePage = () => {
     handleSubmit: handleSubmitRole,
     setValue: setRoleValue,
     watch: watchRole,
-    formState: { errors: roleErrors },
+    formState: { isSubmitting: isChangingRole },
   } = useForm<FormRoleData>({
     resolver: zodResolver(formRoleSchema),
     defaultValues: {
@@ -95,8 +107,8 @@ const ChangeRolePage = () => {
   });
 
   const selectedRole = watchRole("role");
+  const dniValue = watch("dni");
 
-  // Actualizar el rol seleccionado cuando cambie el usuario
   useEffect(() => {
     if (user) {
       setRoleValue("role", user.role);
@@ -104,7 +116,7 @@ const ChangeRolePage = () => {
   }, [user, setRoleValue]);
 
   const fetchUser = async (values: FormData) => {
-    setIsSearching(true);
+    setSearchAttempted(true);
     try {
       const res = await fetch(`/api/user/change-role/search/${values.dni}`);
       if (!res.ok) {
@@ -115,9 +127,9 @@ const ChangeRolePage = () => {
       }
       const data = await res.json();
       setUser(data);
-      toast.success("Usuario encontrado", {
-        description: `${data.name} ${data.lastname}`,
-      });
+      // toast.success("Usuario encontrado", {
+      //   description: `${data.name} ${data.lastname}`,
+      // });
     } catch (error) {
       console.error(error);
       setUser(null);
@@ -128,9 +140,10 @@ const ChangeRolePage = () => {
       } else {
         toast.error("Error al obtener el usuario");
       }
-    } finally {
-      setIsSearching(false);
     }
+    // finally {
+    //   setIsSearching(false);
+    // }
   };
 
   const submitRole = async (values: FormRoleData) => {
@@ -144,7 +157,6 @@ const ChangeRolePage = () => {
       return;
     }
 
-    setIsChangingRole(true);
     try {
       const res = await fetch(`/api/user/change-role/${user.id}`, {
         method: "PUT",
@@ -167,9 +179,7 @@ const ChangeRolePage = () => {
         description: `${user.name} ${user.lastname}: ${roleLabels[previousRole]} → ${roleLabels[newRole]}`,
       });
 
-      // Reset completo
-      resetSearch();
-      setUser(null);
+      handleReset();
     } catch (error) {
       console.error(error);
       if (error instanceof Error) {
@@ -179,57 +189,70 @@ const ChangeRolePage = () => {
       } else {
         toast.error("Error al cambiar el rol");
       }
-    } finally {
-      setIsChangingRole(false);
     }
   };
 
   const handleReset = () => {
     resetSearch();
     setUser(null);
+    setSearchAttempted(false);
   };
 
   return (
-    <div className="container mx-auto py-8 max-w-4xl">
-      <div className="space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold">Cambiar Rol de Usuario</h1>
-          <p className="text-muted-foreground">
-            Busca un usuario por DNI y modifica su rol en el sistema
-          </p>
-        </div>
+    <div className="container mx-auto max-w-6xl">
+      <div className="mb-6">
+        <h4 className="text-2xl font-bold tracking-tight">Gestión de Roles</h4>
+        <p className="text-muted-foreground">
+          Busca usuarios por DNI y modifica su rol.
+        </p>
+      </div>
 
-        {/* Formulario de búsqueda */}
-        <Card>
+      <div className="grid grid-cols-1 lg:grid-cols-2 lg:items-start gap-8">
+        <Card className="w-full">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Search className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <div className="rounded-lg bg-primary/10">
+                <Search className="h-5 w-5 text-primary" />
+              </div>
               Buscar Usuario
             </CardTitle>
-            <CardDescription>
-              Ingresa el DNI del usuario que deseas modificar
-            </CardDescription>
+            <CardDescription></CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-6">
             <form onSubmit={handleSubmit(fetchUser)} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="dni">DNI</Label>
-                <Input
-                  id="dni"
-                  type="text"
-                  placeholder="12345678"
-                  maxLength={8}
-                  {...register("dni")}
-                  className={errors.dni ? "border-destructive" : ""}
-                />
+                <div className="relative">
+                  <Input
+                    id="dni"
+                    type="text"
+                    placeholder="12345678"
+                    maxLength={8}
+                    {...register("dni")}
+                    className={`h-12 text-lg pr-12 ${
+                      errors.dni ? "border-destructive" : ""
+                    }`}
+                  />
+                  {isSearching && (
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                    </div>
+                  )}
+                </div>
                 {errors.dni && (
-                  <p className="text-sm text-destructive">
+                  <div className="flex items-center gap-2 text-sm text-destructive">
+                    <AlertCircle className="h-4 w-4" />
                     {errors.dni.message}
-                  </p>
+                  </div>
                 )}
               </div>
-              <div className="flex gap-2">
-                <Button type="submit" disabled={isSearching} className="flex-1">
+
+              <div className="flex gap-3 pt-2">
+                <Button
+                  type="submit"
+                  disabled={isSearching || dniValue?.length !== 8}
+                  className="flex-1 h-11"
+                >
                   {isSearching ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -242,158 +265,144 @@ const ChangeRolePage = () => {
                     </>
                   )}
                 </Button>
-                {user && (
-                  <Button type="button" variant="outline" onClick={handleReset}>
-                    Limpiar
+                {(user || searchAttempted) && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleReset}
+                    className="h-11"
+                  >
+                    <RefreshCw className="h-4 w-4" />
                   </Button>
                 )}
               </div>
             </form>
+
+            {searchAttempted && !user && !isSearching && (
+              <div className="text-center py-8 text-muted-foreground border-t mt-6">
+                <User className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                <p className="font-medium">Usuario no encontrado</p>
+                <p className="text-sm">Verifica el DNI e inténtalo de nuevo.</p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
-        {/* Información del usuario */}
         {user && (
-          <Card>
+          <Card className="w-full">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-3 text-xl">
+                <div className="rounded-lg bg-primary/10">
+                  <UserCheck className="h-5 w-5 text-primary" />
+                </div>
                 Información del Usuario
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-muted-foreground">
-                    DNI
-                  </Label>
-                  <p className="font-mono">{user.dni}</p>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-muted-foreground">
-                    Nombre Completo
-                  </Label>
-                  <p>
-                    {user.name} {user.lastname}
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-muted-foreground">
-                    Email
-                  </Label>
-                  <p>{user.email}</p>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-muted-foreground">
-                    Teléfono
-                  </Label>
-                  <p>{user.phone}</p>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-muted-foreground">
-                    Institución
-                  </Label>
-                  <p>{user.institution}</p>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-muted-foreground">
-                    Rol Actual
-                  </Label>
-                  <div>
-                    <Badge variant={roleColors[user.role]}>
-                      {roleLabels[user.role]}
-                    </Badge>
+              <div>
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0 p-3 bg-muted rounded-full">
+                    <User className="h-6 w-6 text-muted-foreground" />
                   </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold truncate">
+                      {user.name} {user.lastname}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      DNI: {user.dni}
+                    </p>
+                  </div>
+                  <Badge
+                    variant={roleColors[user.role]}
+                    className="ml-auto flex-shrink-0"
+                  >
+                    {roleLabels[user.role]}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="space-y-3 text-sm border-t pt-6">
+                <div className="flex justify-between items-center gap-4">
+                  <span className="text-muted-foreground">Email:</span>
+                  <span className="font-medium truncate text-right">
+                    {user.email}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Teléfono:</span>
+                  <span className="font-medium">{user.phone}</span>
+                </div>
+                <div className="flex justify-between items-center gap-4">
+                  <span className="text-muted-foreground">Institución:</span>
+                  <span className="font-medium truncate text-right">
+                    {user.institution}
+                  </span>
                 </div>
               </div>
 
               <Separator />
 
-              {/* Formulario de cambio de rol */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <UserCheck className="h-5 w-5" />
-                  <h3 className="text-lg font-semibold">Cambiar Rol</h3>
-                </div>
-
+              <div>
+                <h3 className="font-semibold mb-4">Cambiar Rol</h3>
                 <form
                   onSubmit={handleSubmitRole(submitRole)}
                   className="space-y-4"
                 >
                   <div className="space-y-2">
-                    <Label htmlFor="role">Nuevo Rol</Label>
+                    <Label htmlFor="role">Seleccionar nuevo rol</Label>
                     <Select
                       value={selectedRole}
                       onValueChange={(value) =>
                         setRoleValue("role", value as FormRoleData["role"])
                       }
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="h-11">
                         <SelectValue placeholder="Selecciona un rol" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ADMINISTRATOR">
-                          <div className="flex items-center gap-2">
-                            <Badge variant="destructive" className="text-xs">
-                              Administrador
-                            </Badge>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="PARTICIPANT">
-                          <div className="flex items-center gap-2">
-                            <Badge variant="default" className="text-xs">
-                              Participante
-                            </Badge>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="INSCRIBER">
-                          <div className="flex items-center gap-2">
-                            <Badge variant="secondary" className="text-xs">
-                              Inscriptor
-                            </Badge>
-                          </div>
-                        </SelectItem>
+                        {Object.entries(roleLabels).map(([key, label]) => (
+                          <SelectItem key={key} value={key}>
+                            {label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
-                    {roleErrors.role && (
-                      <p className="text-sm text-destructive">
-                        {roleErrors.role.message}
-                      </p>
-                    )}
                   </div>
 
                   {selectedRole !== user.role && (
-                    <div className="p-4 bg-muted rounded-lg">
-                      <p className="text-sm">
-                        <span className="font-medium">Cambio:</span>{" "}
-                        <Badge variant={roleColors[user.role]} className="mx-1">
+                    <div className="p-3 rounded-md bg-muted/50 border flex flex-col items-center gap-2">
+                      <div className="flex items-center gap-2">
+                        <Badge variant={roleColors[user.role]}>
                           {roleLabels[user.role]}
                         </Badge>
-                        →
-                        <Badge
-                          variant={roleColors[selectedRole]}
-                          className="mx-1"
-                        >
+                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                        <Badge variant={roleColors[selectedRole]}>
                           {roleLabels[selectedRole]}
                         </Badge>
-                      </p>
+                      </div>
                     </div>
                   )}
 
                   <Button
                     type="submit"
                     disabled={isChangingRole || selectedRole === user.role}
-                    className="w-full"
+                    className="w-full h-11"
+                    size="lg"
                   >
                     {isChangingRole ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Cambiando Rol...
+                        Aplicando cambios...
+                      </>
+                    ) : selectedRole === user.role ? (
+                      <>
+                        <CheckCircle2 className="mr-2 h-4 w-4" />
+                        Rol actual
                       </>
                     ) : (
                       <>
                         <UserCheck className="mr-2 h-4 w-4" />
-                        Cambiar Rol
+                        Confirmar cambio de rol
                       </>
                     )}
                   </Button>
