@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X, Eye } from "lucide-react";
-import Image from "next/image";
 import MyImage from "@/components/MyImage";
 
 interface ImageModalProps {
@@ -45,7 +44,12 @@ export function ImageModal({ imagePath, altText }: ImageModalProps) {
           </Button>
 
           <div className="relative z-10 max-w-4xl max-h-[90vh] mx-4">
-            <MyImage altText={altText} imagePath={imagePath} />
+            <MyImage
+              altText={altText}
+              imagePath={imagePath}
+              height={600}
+              width={800}
+            />
           </div>
         </div>
       )}
