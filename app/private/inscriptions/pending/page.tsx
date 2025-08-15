@@ -23,7 +23,7 @@ const PendingInscriptionsPage = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `/api/inscription/pending?page=${page}&pageSize=4`
+        `/api/inscription/pending?page=${page}&pageSize=4`,
       );
       const data = await res.json();
 
@@ -51,13 +51,13 @@ const PendingInscriptionsPage = () => {
   const handleAction = async (id: number, state: string) => {
     try {
       const res = await fetch(
-        `/api/inscription/action?id=${id}&state=${state}`
+        `/api/inscription/action?id=${id}&state=${state}`,
       );
       const data = await res.json();
 
       if (!res.ok) {
         throw new Error(
-          data.message || "Error canbiar el estado de la inscripción"
+          data.message || "Error canbiar el estado de la inscripción",
         );
       }
 
@@ -76,9 +76,9 @@ const PendingInscriptionsPage = () => {
   return (
     <div className="">
       <div className="mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold">
+        <h4 className="text-xl sm:text-2xl font-bold">
           Inscripciones Pendientes
-        </h1>
+        </h4>
         <p className="text-muted-foreground mt-2">
           Inscripciones en espera de aprobación
         </p>
@@ -122,7 +122,7 @@ const PendingInscriptionsPage = () => {
                 >
                   {pageNumber}
                 </Button>
-              )
+              ),
             )}
           </div>
           <Button

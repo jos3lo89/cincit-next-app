@@ -10,7 +10,7 @@ const RegisterPage = async () => {
   if (!result?.value) {
     return (
       <div>
-        <h1>Registro</h1>
+        <h4>Registro</h4>
         <p>No hay token de registro</p>
       </div>
     );

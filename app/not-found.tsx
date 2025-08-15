@@ -6,9 +6,9 @@ const NotFoundPage = () => {
     <div className="min-h-screen  flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 text-center">
         <div className="space-y-4">
-          <h1 className="text-9xl font-extrabold text-slate-200 select-none">
+          <h2 className="text-9xl font-extrabold text-slate-200 select-none">
             404
-          </h1>
+          </h2>
           <div className="space-y-2">
             <h2 className="text-3xl font-bold text-slate-400 sm:text-4xl">
               Página no encontrada

@@ -21,7 +21,7 @@ const PendingRejectedPage = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `/api/inscription/rejected?page=${page}&pageSize=4`
+        `/api/inscription/rejected?page=${page}&pageSize=4`,
       );
       const data = await res.json();
 
@@ -49,13 +49,13 @@ const PendingRejectedPage = () => {
   const handleAction = async (id: number, state: string) => {
     try {
       const res = await fetch(
-        `/api/inscription/action?id=${id}&state=${state}`
+        `/api/inscription/action?id=${id}&state=${state}`,
       );
       const data = await res.json();
 
       if (!res.ok) {
         throw new Error(
-          data.message || "Error canbiar el estado de la inscripción"
+          data.message || "Error canbiar el estado de la inscripción",
         );
       }
 
@@ -74,9 +74,9 @@ const PendingRejectedPage = () => {
   return (
     <div className="">
       <div className="mb-6">
-        <h1 className="text-xl sm:text-2xl font-semibold">
+        <h4 className="text-xl sm:text-2xl font-semibold">
           Inscripciones Rechazadas
-        </h1>
+        </h4>
         {meta && !loading && (
           <p className="text-sm text-muted-foreground ">
             Mostrando {inscriptions.length} de {meta.total} inscripciones
@@ -118,7 +118,7 @@ const PendingRejectedPage = () => {
                 >
                   {pageNumber}
                 </Button>
-              )
+              ),
             )}
           </div>
           <Button

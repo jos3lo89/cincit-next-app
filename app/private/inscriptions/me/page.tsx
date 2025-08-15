@@ -78,7 +78,7 @@ const InscriptionStateMePage = async () => {
   return (
     <div className="container mx-auto p-6 space-y-6 mb-20">
       <div className="text-center space-y-4">
-        <h1 className="text-3xl font-bold">Estado de Inscripción CINCIT</h1>
+        <h4 className="text-3xl font-bold">Estado de Inscripción CINCIT</h4>
         <div className="flex justify-center">
           <Badge
             variant="outline"
