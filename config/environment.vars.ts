@@ -9,6 +9,7 @@ const envVar = object({
   EMAIL_PORT: string(),
   JWT_SECRET: string(),
   AUTH_SECRET: string(),
+  AUTH_URL: string(),
   NEXT_PUBLIC_URL_IMG_SERVICE: string(),
   MY_URL_SITE: string(),
 });
