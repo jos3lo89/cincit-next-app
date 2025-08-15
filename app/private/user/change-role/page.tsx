@@ -127,9 +127,6 @@ const ChangeRolePage = () => {
       }
       const data = await res.json();
       setUser(data);
-      // toast.success("Usuario encontrado", {
-      //   description: `${data.name} ${data.lastname}`,
-      // });
     } catch (error) {
       console.error(error);
       setUser(null);
@@ -141,9 +138,6 @@ const ChangeRolePage = () => {
         toast.error("Error al obtener el usuario");
       }
     }
-    // finally {
-    //   setIsSearching(false);
-    // }
   };
 
   const submitRole = async (values: FormRoleData) => {
@@ -207,10 +201,10 @@ const ChangeRolePage = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 lg:items-start gap-8">
+      <div className="max-w-lg mx-auto space-y-2">
         <Card className="w-full">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <div className="rounded-lg bg-primary/10">
                 <Search className="h-5 w-5 text-primary" />
               </div>
@@ -218,15 +212,16 @@ const ChangeRolePage = () => {
             </CardTitle>
             <CardDescription></CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit(fetchUser)} className="space-y-4">
+          <CardContent className="space-y-2">
+            <form onSubmit={handleSubmit(fetchUser)} className="space-y-2">
               <div className="space-y-2">
                 <Label htmlFor="dni">DNI</Label>
                 <div className="relative">
                   <Input
                     id="dni"
-                    type="text"
+                    type="number"
                     placeholder="12345678"
+                    pattern="[0-9]*"
                     maxLength={8}
                     {...register("dni")}
                     className={`h-12 text-lg pr-12 ${
@@ -247,11 +242,11 @@ const ChangeRolePage = () => {
                 )}
               </div>
 
-              <div className="flex gap-3 pt-2">
+              <div className="flex gap-2">
                 <Button
                   type="submit"
                   disabled={isSearching || dniValue?.length !== 8}
-                  className="flex-1 h-11"
+                  className="flex-1"
                 >
                   {isSearching ? (
                     <>
@@ -266,12 +261,7 @@ const ChangeRolePage = () => {
                   )}
                 </Button>
                 {(user || searchAttempted) && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={handleReset}
-                    className="h-11"
-                  >
+                  <Button type="button" variant="outline" onClick={handleReset}>
                     <RefreshCw className="h-4 w-4" />
                   </Button>
                 )}
@@ -321,42 +311,25 @@ const ChangeRolePage = () => {
                 </div>
               </div>
 
-              <div className="space-y-3 text-sm border-t pt-6">
-                <div className="flex justify-between items-center gap-4">
-                  <span className="text-muted-foreground">Email:</span>
-                  <span className="font-medium truncate text-right">
-                    {user.email}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Teléfono:</span>
-                  <span className="font-medium">{user.phone}</span>
-                </div>
-                <div className="flex justify-between items-center gap-4">
-                  <span className="text-muted-foreground">Institución:</span>
-                  <span className="font-medium truncate text-right">
-                    {user.institution}
-                  </span>
-                </div>
-              </div>
-
               <Separator />
 
               <div>
-                <h3 className="font-semibold mb-4">Cambiar Rol</h3>
                 <form
                   onSubmit={handleSubmitRole(submitRole)}
                   className="space-y-4"
                 >
                   <div className="space-y-2">
-                    <Label htmlFor="role">Seleccionar nuevo rol</Label>
+                    <Label htmlFor="role" className="text-sm">
+                      Seleccionar nuevo rol
+                    </Label>
                     <Select
+                      name="role"
                       value={selectedRole}
                       onValueChange={(value) =>
                         setRoleValue("role", value as FormRoleData["role"])
                       }
                     >
-                      <SelectTrigger className="h-11">
+                      <SelectTrigger className="h-11" id="role">
                         <SelectValue placeholder="Selecciona un rol" />
                       </SelectTrigger>
                       <SelectContent>

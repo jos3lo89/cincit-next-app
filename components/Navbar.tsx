@@ -18,7 +18,11 @@ const Navbar = async () => {
         </div>
       ) : (
         <form action={handleSignOut}>
-          <Button variant="default" type="submit" className="cursor-pointer">
+          <Button
+            variant="destructive"
+            type="submit"
+            className="cursor-pointer"
+          >
             Cerrar sesión
           </Button>
         </form>
