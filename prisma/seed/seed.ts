@@ -74,8 +74,8 @@ async function main() {
   const adminVoucher = await prisma.voucher.create({
     data: {
       userId: adminUser.id,
-      amount: 0,
-      path: "https://i.pinimg.com/736x/3d/be/40/3dbe40e21f2ab6c4514c24d9e8a04d45.jpg",
+      urlfull:
+        "https://i.pinimg.com/736x/3d/be/40/3dbe40e21f2ab6c4514c24d9e8a04d45.jpg",
     },
   });
   await prisma.inscription.create({
@@ -89,8 +89,8 @@ async function main() {
   const inscriberVoucher = await prisma.voucher.create({
     data: {
       userId: inscriberUser.id,
-      amount: 0,
-      path: "https://i.pinimg.com/736x/5d/d3/07/5dd307b9ea068cf7b5346344ed9fa84a.jpg",
+      urlfull:
+        "https://i.pinimg.com/736x/5d/d3/07/5dd307b9ea068cf7b5346344ed9fa84a.jpg",
     },
   });
   await prisma.inscription.create({

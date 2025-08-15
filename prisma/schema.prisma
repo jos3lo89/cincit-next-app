@@ -113,8 +113,9 @@ enum InscriptionType {
 model Voucher {
   id           Int           @id @default(autoincrement())
   userId       String        @map("user_id")
-  amount       Int
-  path         String        @db.Text
+  url          String?       @db.Text
+  urlfull      String?       @db.Text
+  imgId        String?       @db.Text
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
   user         User          @relation(fields: [userId], references: [id])
@@ -136,13 +137,4 @@ model Inscription {
   cincitEdition   CincitEdition    @default(E2025)
 
   @@map("inscription")
-}
-
-model Settings {
-  key       String   @id @unique @db.VarChar(50)
-  value     String   @db.Text
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("settings")
 }
