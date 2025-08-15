@@ -15,7 +15,8 @@ const calculateTimeLeft = (distance: number) => {
 };
 
 const CountdownTimer = () => {
-  const eventDate = new Date("2025-08-17T09:00:00").getTime();
+  const dateStr = "2025-08-16 08:00";
+  const eventDate = new Date(`${dateStr.replace(" ", "T")}:00-05:00`).getTime();
 
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
