@@ -13,9 +13,9 @@ const prisma = new PrismaClient();
 
 function getAttendanceDates(): Date[] {
   const simpleEventDates = [
-    "2025-08-18 08:00", // Lunes del evento a las 8:00 AM
-    "2025-08-19 08:00", // Martes del evento a las 8:00 AM
-    "2025-08-20 08:00", // Miércoles del evento a las 8:00 AM
+    "2025-08-16 08:00", // Lunes del evento a las 8:00 AM
+    "2025-08-17 08:00", // Martes del evento a las 8:00 AM
+    "2025-08-18 08:00", // Miércoles del evento a las 8:00 AM
   ];
 
   return simpleEventDates.map((dateStr) => {
