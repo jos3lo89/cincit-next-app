@@ -148,7 +148,7 @@ const InscriptionStatePage = async () => {
           <CardContent className="space-y-4">
             <div className="text-center">
               <img
-                src={inscriptionState.voucher.path || "/placeholder.svg"}
+                src={inscriptionState.voucher.urlfull || "/placeholder.svg"}
                 alt="Comprobante de pago"
                 className="w-full max-w-sm mx-auto rounded-lg border shadow-sm"
               />

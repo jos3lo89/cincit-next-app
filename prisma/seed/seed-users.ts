@@ -176,8 +176,7 @@ async function main() {
     const voucher = await prisma.voucher.create({
       data: {
         userId: user.id,
-        amount: 0,
-        path: participant.voucherPath,
+        urlfull: participant.voucherPath,
       },
     });
 
