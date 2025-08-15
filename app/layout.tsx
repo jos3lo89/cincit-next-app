@@ -16,7 +16,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const myUrl = process.env.MY_URL_SITE;
+
 export const metadata: Metadata = {
+  metadataBase: new URL(myUrl),
   title: "Cincit 2025",
   description:
     "CINCIT es un congreso internacional de inteligencia artificial y tecnología organizado por la Escuela Profesional de Ingeniería de Sistemas de la Universidad Nacional José María Arguedas.",
