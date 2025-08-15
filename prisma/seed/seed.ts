@@ -7,40 +7,33 @@ import {
   InscriptionState,
 } from "@prisma/client";
 
+import { faker } from "@faker-js/faker";
+
 const prisma = new PrismaClient();
 
 function getAttendanceDates(): Date[] {
-  const today = new Date("2025-08-01T12:00:00Z");
-  const twoWeeksFromNow = new Date(today);
-  twoWeeksFromNow.setDate(today.getDate() + 14);
+  const simpleEventDates = [
+    "2025-08-18 08:00", // Lunes del evento a las 8:00 AM
+    "2025-08-19 08:00", // Martes del evento a las 8:00 AM
+    "2025-08-20 08:00", // Miércoles del evento a las 8:00 AM
+  ];
 
-  const dayOfWeek = twoWeeksFromNow.getDay();
-  const daysUntilMonday = (1 - dayOfWeek + 7) % 7;
-  const monday = new Date(twoWeeksFromNow);
-  monday.setDate(monday.getDate() + daysUntilMonday);
-  monday.setHours(8, 0, 0, 0);
-
-  const tuesday = new Date(monday);
-  tuesday.setDate(monday.getDate() + 1);
-
-  const wednesday = new Date(monday);
-  wednesday.setDate(monday.getDate() + 2);
-
-  return [monday, tuesday, wednesday];
+  return simpleEventDates.map((dateStr) => {
+    const isoDateStr = `${dateStr.replace(" ", "T")}:00-05:00`;
+    return new Date(isoDateStr);
+  });
 }
 
-async function main() {
-  console.log("🚀 Iniciando el proceso de seeding...");
-
+async function userRegister() {
   const adminUser = await prisma.user.upsert({
     where: { email: "ganbaru743@gmail.com" },
     update: {},
     create: {
-      dni: "11111111",
-      name: "Admin",
-      lastname: "CINCIT",
+      dni: faker.string.numeric(8),
+      name: faker.person.firstName(),
+      lastname: faker.person.lastName(),
       email: "ganbaru743@gmail.com",
-      phone: "987654321",
+      phone: faker.string.numeric(9),
       institution: "UNAJMA",
       role: Role.ADMINISTRATOR,
     },
@@ -50,23 +43,20 @@ async function main() {
     where: { email: "evilain999@gmail.com" },
     update: {},
     create: {
-      dni: "22222222",
-      name: "Inscriptor",
-      lastname: "CINCIT",
+      dni: faker.string.numeric(8),
+      name: faker.person.firstName(),
+      lastname: faker.person.lastName(),
       email: "evilain999@gmail.com",
-      phone: "987654322",
+      phone: faker.string.numeric(9),
       institution: "UNAJMA",
       role: Role.INSCRIBER,
     },
   });
 
-  console.log("✅ Usuarios esenciales (admin e inscriptor) creados con éxito.");
-
-  console.log("✍️  Creando inscripciones para usuarios esenciales...");
-
   await prisma.inscription.deleteMany({
     where: { userId: { in: [adminUser.id, inscriberUser.id] } },
   });
+
   await prisma.voucher.deleteMany({
     where: { userId: { in: [adminUser.id, inscriberUser.id] } },
   });
@@ -74,39 +64,37 @@ async function main() {
   const adminVoucher = await prisma.voucher.create({
     data: {
       userId: adminUser.id,
-      urlfull:
-        "https://i.pinimg.com/736x/3d/be/40/3dbe40e21f2ab6c4514c24d9e8a04d45.jpg",
+      urlfull: "/robot.webp",
     },
   });
+
   await prisma.inscription.create({
     data: {
       userId: adminUser.id,
       voucherId: adminVoucher.id,
-      state: InscriptionState.approved,
+      state: InscriptionState.pending,
     },
   });
 
   const inscriberVoucher = await prisma.voucher.create({
     data: {
       userId: inscriberUser.id,
-      urlfull:
-        "https://i.pinimg.com/736x/5d/d3/07/5dd307b9ea068cf7b5346344ed9fa84a.jpg",
+      urlfull: "/robot.webp",
     },
   });
+
   await prisma.inscription.create({
     data: {
       userId: inscriberUser.id,
       voucherId: inscriberVoucher.id,
-      state: InscriptionState.approved,
+      state: InscriptionState.pending,
     },
   });
 
-  console.log("✅ Inscripciones para admin e inscriptor creadas con éxito.");
-
-  console.log("🧹 Limpiando registros de asistencia previos...");
   await prisma.attendance.deleteMany({});
-  console.log("🗑️ Registros de asistencia eliminados.");
+}
 
+async function attendanceCreate() {
   const [monday, tuesday, wednesday] = getAttendanceDates();
 
   await prisma.attendance.createMany({
@@ -149,17 +137,18 @@ async function main() {
       },
     ],
   });
+}
 
-  console.log(
-    `✅ Franjas de asistencia creadas para 3 días (entrada y salida) a partir del ${monday.toLocaleDateString()}.`
-  );
-
-  console.log("🎉 ¡Seeding finalizado con éxito!");
+async function main() {
+  console.log("¡Seeding inicializado con éxito!");
+  await userRegister();
+  await attendanceCreate();
+  console.log("¡Seeding finalizado con éxito!");
 }
 
 main()
   .catch((e) => {
-    console.error("❌ Ocurrió un error durante el seeding:", e);
+    console.error("Ocurrió un error durante el seeding:", e);
     process.exit(1);
   })
   .finally(async () => {
