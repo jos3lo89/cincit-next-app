@@ -83,7 +83,7 @@ const InscriptionStatePage = async () => {
           <Badge
             variant="outline"
             className={`text-lg px-6 py-2 ${getStateColor(
-              inscriptionState.state,
+              inscriptionState.state
             )}`}
           >
             {getStateText(inscriptionState.state)}

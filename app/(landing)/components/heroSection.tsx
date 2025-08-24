@@ -3,10 +3,11 @@ import { Eye, Ticket } from "lucide-react";
 import CountdownTimer from "./CountdownTimer";
 import Link from "next/link";
 import MatrixText from "@/components/MatrixText";
+import SocialIcons from "@/components/socialIcons";
 
 const HeroSection = () => {
   return (
-    <section className="min-h-screen pt-4 pb-1 px-4 sm:px-6 lg:px-8">
+    <section className="min-h-screen pt-16 pb-1 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8 animate-fade-in-up">
@@ -19,9 +20,13 @@ const HeroSection = () => {
 
               <div className="space-y-2 text-center lg:text-left">
                 <h2 className="text-2xl md:text-3xl lg:text-5xl font-bold leading-tight">
-                  <span className="text-gradient">Innovación & Tecnología</span>
+                  <span className="text-white/70">Congreso </span>
+                  <span className="text-gradient">Internacional</span>
                   <br />
-                  <span className="text-gradient-secondary">del Futuro</span>
+                  <span className="text-white/70"> de </span>
+                  <span className="text-gradient-secondary">Informática</span>
+                  <span className="text-white/70"> y </span>
+                  <span className="text-gradient-secondary">Sistemas</span>
                 </h2>
               </div>
 
@@ -37,11 +42,10 @@ const HeroSection = () => {
             <div className="space-y-4 text-center lg:text-left">
               <CountdownTimer />
             </div>
-
             <div className="flex flex-col sm:flex-row gap-4  justify-center lg:justify-start ">
               <Button
                 size="lg"
-                className="bg-gradient-primary cursor-pointer hover:bg-gradient-secondary text-primary-foreground font-semibold px-8 py-4 rounded-xl shadow-glow-primary hover-glow transition-all duration-300"
+                className=" cursor-pointer hover:bg-gradient-secondary text-primary-foreground font-semibold px-8 py-4 rounded-xl shadow-glow-primary hover-glow transition-all duration-300"
               >
                 <Ticket className=" h-5 w-5" />
                 Aquire tu entrada
@@ -53,12 +57,20 @@ const HeroSection = () => {
                 className="border-primary/30 cursor-pointer text-foreground hover:bg-card-hover px-8 py-4 rounded-xl hover-scale transition-all duration-300"
                 asChild
               >
-                <Link href="/signin">
+                <Link href="/login">
                   <Eye className=" h-5 w-5" />
                   Estado de inscripción
                 </Link>
               </Button>
             </div>
+
+            {/* <div className="flex flex-wrap justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
+              <Facebook className="h-5 w-5 hover-scale transition-all duration-300 cursor-pointer" />
+              <Facebook className="h-5 w-5 hover-scale transition-all duration-300 cursor-pointer" />
+              <Facebook className="h-5 w-5 hover-scale transition-all duration-300 cursor-pointer" />
+            </div> */}
+
+            <SocialIcons />
 
             <div className="flex flex-wrap justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
@@ -68,10 +80,6 @@ const HeroSection = () => {
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-gradient-secondary rounded-full animate-glow"></div>
                 <span>Andahuaylas, Apurimac, Perú</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-gradient-primary rounded-full animate-glow"></div>
-                <span>+300 Participantes</span>
               </div>
             </div>
           </div>

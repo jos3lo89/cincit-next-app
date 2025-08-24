@@ -15,7 +15,7 @@ const calculateTimeLeft = (distance: number) => {
 };
 
 const CountdownTimer = () => {
-  const dateStr = "2025-08-16 08:00";
+  const dateStr = "2025-08-27 08:00";
   const eventDate = new Date(`${dateStr.replace(" ", "T")}:00-05:00`).getTime();
 
   const [timeLeft, setTimeLeft] = useState({
@@ -83,7 +83,7 @@ const CountdownTimer = () => {
 
   if (isEventActive) {
     return (
-      <div className="text-center lg:text-left">
+      <div className="text-center lg:text-left my-16">
         <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-500 to-cyan-700 bg-clip-text text-transparent animate-pulse">
           ¡EVENTO EN CURSO!
         </h2>

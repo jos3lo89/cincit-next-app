@@ -65,7 +65,7 @@ export default auth(async function middleware(req) {
     const allowedRoutes = allowedRoutesByRole[userRole] || [];
 
     const isPathAllowed = allowedRoutes.some((path) =>
-      nextUrl.pathname.startsWith(path),
+      nextUrl.pathname.startsWith(path)
     );
 
     if (!isPathAllowed) {
